@@ -19,36 +19,39 @@
 # include <stdio.h>
 # include <string.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 typedef struct	s_coder
 {
 	long long		last_comp_time;
 	int				id;
 	pthread_t		thread_id;
-	pthread_mutex_t	*lock_dongle;
+	pthread_mutex_t	lock_dongle;
+	pthread_cond_t	cond;
 	int				count_compile;
-	void			*shared_env_struct;
+	int				second_index_dongle;
+	t_shared_env	*shared_env;
 	pthread_mutex_t	lock_coder_data;
 }	t_coder;
 
 typedef struct	s_dongle
 {
-	pthread_mutex_t	lock;
-	long long		available;
-	int				*priority;
+	int		free;
+	long long		released_at;
+	int		*priority;
 }	t_dongle;
 
 typedef struct s_shared_env
 {
-	int				numbers_of_coders;
+	int				nb_cod;
 	int				time_to_burnout;
 	int				time_to_compile;
 	int				time_to_debug;
 	int				time_to_refactor;
 	int				number_of_compiles_required;
-	int				dongle_cooldown;
+	long long		dongle_cooldown;
 	char			*scheduler;
-	void			*dongles_array;
+	t_dongle		*dongles;
 	pthread_mutex_t	lock_output;
 	pthread_mutex_t	lock_sim_state;
 	int				simulation_state;
