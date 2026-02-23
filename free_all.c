@@ -6,11 +6,11 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 09:33:53 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 15:54:41 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "coders/codexion.h"
 
 void	*free_all(void *ptr[], int number, int nb_priority_array)
 {

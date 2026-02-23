@@ -6,11 +6,11 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/20 15:04:43 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 16:49:53 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "coders/codexion.h"
 
 int final_check_input(int i, char *nptr)
 {
@@ -56,7 +56,8 @@ void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env = malloc(sizeof(t_shared_env));
 	if (!shared_env)
 		return NULL;
-	shared_env->num_cod = args_array[0];
+	shared_env->nb_cod = args_array[0];
+	shared_env->start = get_time_now();
 	shared_env->time_to_burnout = args_array[1];
 	shared_env->time_to_compile = args_array[2];
 	shared_env->time_to_debug = args_array[3];
@@ -84,8 +85,9 @@ void	*parsing(int argc, char **args)
 				 "positive integers.");
 			return NULL;
 		}
+		i++;
 	}
-	if (args[i] == 'fifo' || args[i] == 'edf')
+	if (strcmp(args[i], "fifo") == 0 || strcmp(args[i], "edf") == 0)
 		return create_shared_env(args_array, args[i]);
 	else
 	{

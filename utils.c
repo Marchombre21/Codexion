@@ -1,0 +1,129 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
+/*   Updated: 2026/02/23 17:01:07 by bfitte           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "coders/codexion.h"
+
+long long	get_time_now()
+{
+	struct timeval ts;
+
+	gettimeofday(&ts, NULL);
+	return (ts.tv_sec * 1000LL) + (ts.tv_usec / 1000);
+}
+
+void	stop_threads(pthread_t *threads, t_coder *coder)
+{
+	int	i;
+
+	i = 0;
+	while (i < coder->shared_env->nb_cod)
+	{
+		if (i + 1 != coder->id)
+			pthread_cancel(threads[i]);
+		i++;
+	}
+	pthread_cancel(threads[coder->id - 1]);
+}
+
+/// @brief Display the message number times
+/// @param coder The coder who execute the action.
+/// @param message The message to display.
+/// @param number The number of time to display.
+void	display_message(t_coder *coder, char *message, int number)
+{
+	pthread_mutex_lock(coder->lock_coder_data);
+	long long	current_timestamp;
+	int			i;
+
+	i = 0;
+	while(i < number)
+	{
+		current_timestamp = get_time_now() - coder->shared_env->start;
+		printf("%lld %i %s", current_timestamp, coder->id, message);
+		i++;
+	}
+	pthread_mutex_unlock(coder->lock_coder_data);
+}
+
+void	get_end_cooldown(long long waited_time, struct timespec *ts)
+{
+	struct timeval	now;
+
+	gettimeofday(&now, NULL);
+	waited_time += (now.tv_sec * 1000LL) + (now.tv_usec / 1000);
+	ts->tv_sec = waited_time / 1000;
+	ts->tv_nsec = (waited_time % 1000) * 1000000;
+}
+
+void	check_available(long long available, t_coder *coder)
+{
+	struct timespec	ts;
+
+	if (available == 0)
+		{
+			pthread_cond_wait(coder->cond_free, &coder->dongles[0].lock);
+			pthread_cond_wait(coder->cond_free, &coder->dongles[1].lock);
+		}
+		else
+		{
+			get_end_cooldown(available, &ts);
+			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[0].lock, &ts);
+			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[1].lock, &ts);
+		}
+}
+
+long long	checking_available(t_coder *coder, long long cooldown)
+{
+	struct timeval 	tv;
+	long long		waited_time_1;
+	long long		waited_time_2;
+
+	if (coder->dongles[0].free && coder->dongles[1].free)
+	{
+		if (gettimeofday(&tv, NULL) == -1)
+			return (-1);
+		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[0].released_at;
+		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[1].released_at;
+		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))
+			return (1);
+		else
+		{
+			if (waited_time_1 < waited_time_2)
+				return (cooldown - waited_time_1);
+			else
+				return (cooldown - waited_time_2);
+		}
+	}
+	else
+		return (0);
+}
+
+
+void	unlock_dongles(t_coder *coder)
+{
+	int	temp;
+	int	i;
+
+	i = 0;
+	while (i < 2)
+	{
+		coder->dongles[i].free = 1;
+		temp = coder->dongles[i].priority[1];
+		coder->dongles[i].priority[1] = coder->id;
+		coder->dongles[i].priority[0] = temp;
+		coder->dongles[i].released_at = get_time_now();
+		pthread_mutex_unlock(&coder->dongles[i].lock);
+		pthread_cond_broadcast(coder->cond_free);
+		pthread_cond_broadcast(coder->cond_priority);
+		i++;
+	}
+}

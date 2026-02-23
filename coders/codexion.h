@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 11:48:32 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 17:00:42 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,6 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
-
-typedef struct	s_coder
-{
-	long long		last_comp_time;
-	int				id;
-	pthread_t		thread_id;
-	// t_dongle		dongle_1;
-	// t_dongle		dongle_2;
-	t_dongle		dongles[2];
-	int				count_compile;
-	t_shared_env	*shared_env;
-	pthread_mutex_t	*lock_coder_data;
-	pthread_cond_t	*cond_priority;
-	pthread_cond_t	*cond_available;
-	pthread_cond_t	*cond_free;
-}	t_coder;
 
 typedef struct	s_dongle
 {
@@ -55,7 +39,9 @@ typedef struct s_shared_env
 	int				time_to_refactor;
 	int				number_of_compiles_required;
 	long long		dongle_cooldown;
+	long long		start;
 	char			*scheduler;
+	pthread_t		*threads;
 	t_dongle		*dongles;
 	pthread_mutex_t	lock_output;
 	pthread_mutex_t	lock_sim_state;
@@ -63,10 +49,35 @@ typedef struct s_shared_env
 	
 }	t_shared_env;
 
-void	*parsing(int argc, char **args);
-void	*free_all(void *ptr[], int number, int nb_priority_array);
-void	*create_coders(t_shared_env *shared_env);
-void	initialize_priority(t_dongle *dongles, t_coder *coders);
-void	create_dongles(t_shared_env *shared_env);
+typedef struct	s_coder
+{
+	long long		last_comp_time;
+	int				id;
+	// t_dongle		dongle_1;
+	// t_dongle		dongle_2;
+	t_dongle		dongles[2];
+	int				count_compile;
+	t_shared_env	*shared_env;
+	pthread_mutex_t	*lock_coder_data;
+	pthread_cond_t	*cond_priority;
+	pthread_cond_t	cond_available;
+	pthread_cond_t	*cond_free;
+}	t_coder;
+
+void		*parsing(int argc, char **args);
+void		*free_all(void *ptr[], int number, int nb_priority_array);
+void		*create_coders(t_shared_env *shared_env);
+void		unlock_dongles(t_coder *coder);
+void		initialize_priority(t_dongle *dongles, t_coder *coders);
+void		display_message(t_coder *coder, char *message, int number);
+void		get_end_cooldown(long long waited_time, struct timespec *ts);
+long long	get_time_now();
+int			create_threads(t_shared_env *shared_env, t_coder *coders);
+void		stop_threads(pthread_t *threads, t_coder *coder);
+long long	checking_available(t_coder *coder, long long cooldown);
+void		check_available(long long available, t_coder *coder);
+void		*taking_dongles(void *coder);
+void		start_compile(t_coder *coder);
+void		*create_dongles(t_shared_env *shared_env);
 
 #endif
