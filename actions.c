@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 16:37:07 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 18:21:12 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,18 @@ void	*taking_dongles(void *coder)
 	t_coder		*new_coder;
 
 	new_coder = (t_coder *)coder;
-	pthread_mutex_lock(&new_coder->dongles[0].lock);
-	pthread_mutex_lock(&new_coder->dongles[1].lock);
+	if (new_coder->id == new_coder->shared_env->nb_cod)
+	{
+		pthread_mutex_lock(&new_coder->dongles[1].lock);
+		pthread_mutex_lock(&new_coder->dongles[0].lock);
+	}
+	else
+	{
+		pthread_mutex_lock(&new_coder->dongles[0].lock);
+		pthread_mutex_lock(&new_coder->dongles[1].lock);
+	}
 	available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
-	while (available != 1)
+	while (1)
 	{
 		if (available == -1)
 		{
@@ -29,20 +37,24 @@ void	*taking_dongles(void *coder)
 			return NULL;
 		}
 		check_available(available, new_coder);
+		if (available == 1)
+		{
+			if ((new_coder->id == new_coder->dongles[0].priority[0]) &&
+			(new_coder->id == new_coder->dongles[1].priority[0]))
+			{
+				new_coder->dongles[0].free = 0;
+				new_coder->dongles[1].free = 0;
+				start_compile(new_coder);
+				return NULL;
+			}
+			else
+			{
+				pthread_mutex_unlock(&new_coder->dongles[1].lock);
+				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0].lock);
+				pthread_mutex_lock(&new_coder->dongles[1].lock);
+			}
+		}
 		available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
-	}
-	if ((new_coder->id == new_coder->dongles[0].priority[0]) &&
-	(new_coder->id == new_coder->dongles[1].priority[0]))
-	{
-		new_coder->dongles[0].free = 0;
-		new_coder->dongles[1].free = 0;
-		start_compile(new_coder);
-	}
-	else
-	{
-		pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0].lock);
-		pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[1].lock);
-		taking_dongles(new_coder);
 	}
 	return NULL;
 }

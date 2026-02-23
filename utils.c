@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 17:01:07 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 18:05:01 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,16 @@ void	check_available(long long available, t_coder *coder)
 
 	if (available == 0)
 		{
+			pthread_mutex_unlock(&coder->dongles[1].lock);
 			pthread_cond_wait(coder->cond_free, &coder->dongles[0].lock);
-			pthread_cond_wait(coder->cond_free, &coder->dongles[1].lock);
+			pthread_mutex_lock(&coder->dongles[1].lock);
 		}
-		else
+	else if (available != 1)
 		{
 			get_end_cooldown(available, &ts);
+			pthread_mutex_unlock(&coder->dongles[1].lock);
 			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[0].lock, &ts);
-			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[1].lock, &ts);
+			pthread_mutex_lock(&coder->dongles[1].lock);
 		}
 }
 
