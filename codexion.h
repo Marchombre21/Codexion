@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 08:26:14 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/23 11:48:32 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <limits.h>
 # include <stdio.h>
 # include <string.h>
+# include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
 
@@ -26,11 +27,12 @@ typedef struct	s_coder
 	long long		last_comp_time;
 	int				id;
 	pthread_t		thread_id;
-	pthread_mutex_t	*lock_dongle_1;
-	pthread_mutex_t	*lock_dongle_2;
+	// t_dongle		dongle_1;
+	// t_dongle		dongle_2;
+	t_dongle		dongles[2];
 	int				count_compile;
 	t_shared_env	*shared_env;
-	pthread_mutex_t	lock_coder_data;
+	pthread_mutex_t	*lock_coder_data;
 	pthread_cond_t	*cond_priority;
 	pthread_cond_t	*cond_available;
 	pthread_cond_t	*cond_free;
@@ -62,8 +64,9 @@ typedef struct s_shared_env
 }	t_shared_env;
 
 void	*parsing(int argc, char **args);
-void	*free_all(void *ptr[], int number);
+void	*free_all(void *ptr[], int number, int nb_priority_array);
 void	*create_coders(t_shared_env *shared_env);
+void	initialize_priority(t_dongle *dongles, t_coder *coders);
 void	create_dongles(t_shared_env *shared_env);
 
 #endif
