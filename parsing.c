@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/20 13:53:58 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/20 15:04:43 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env = malloc(sizeof(t_shared_env));
 	if (!shared_env)
 		return NULL;
-	shared_env->numbers_of_coders = args_array[0];
+	shared_env->num_cod = args_array[0];
 	shared_env->time_to_burnout = args_array[1];
 	shared_env->time_to_compile = args_array[2];
 	shared_env->time_to_debug = args_array[3];

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/20 14:16:15 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/20 15:24:01 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ typedef struct	s_coder
 	long long		last_comp_time;
 	int				id;
 	pthread_t		thread_id;
-	pthread_mutex_t	*lock_dongle;
+	pthread_mutex_t	*lock_dongle_1;
+	pthread_mutex_t	*lock_dongle_2;
 	int				count_compile;
-	void			*shared_env_struct;
+	t_shared_env			*shared_env_struct;
 	pthread_mutex_t	lock_coder_data;
 }	t_coder;
 
@@ -40,7 +41,7 @@ typedef struct	s_dongle
 
 typedef struct s_shared_env
 {
-	int				numbers_of_coders;
+	int				num_cod;
 	int				time_to_burnout;
 	int				time_to_compile;
 	int				time_to_debug;
@@ -48,7 +49,7 @@ typedef struct s_shared_env
 	int				number_of_compiles_required;
 	int				dongle_cooldown;
 	char			*scheduler;
-	void			*dongles_array;
+	t_dongle		*dongles;
 	pthread_mutex_t	lock_output;
 	pthread_mutex_t	lock_sim_state;
 	int				simulation_state;
@@ -56,5 +57,7 @@ typedef struct s_shared_env
 }	t_shared_env;
 
 void	*parsing(int argc, char **args);
+void	*free_all(void *ptr[], int number);
+void	create_dongles(t_shared_env *shared_env);
 
 #endif
