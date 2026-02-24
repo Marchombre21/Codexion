@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 17:00:42 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 09:10:18 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,20 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+typedef struct s_coder t_coder;
+
+typedef struct	s_priority
+{
+	t_coder	*order[2];
+	char	*scheduler;
+}	t_priority;
+
 typedef struct	s_dongle
 {
 	pthread_mutex_t	lock;
 	int				free;
 	long long		released_at;
-	int				*priority;
+	t_priority		*priority;
 }	t_dongle;
 
 typedef struct s_shared_env
@@ -53,9 +61,7 @@ typedef struct	s_coder
 {
 	long long		last_comp_time;
 	int				id;
-	// t_dongle		dongle_1;
-	// t_dongle		dongle_2;
-	t_dongle		dongles[2];
+	t_dongle		*dongles[2];
 	int				count_compile;
 	t_shared_env	*shared_env;
 	pthread_mutex_t	*lock_coder_data;
@@ -76,6 +82,7 @@ int			create_threads(t_shared_env *shared_env, t_coder *coders);
 void		stop_threads(pthread_t *threads, t_coder *coder);
 long long	checking_available(t_coder *coder, long long cooldown);
 void		check_available(long long available, t_coder *coder);
+void		insert_priority(t_coder *coder);
 void		*taking_dongles(void *coder);
 void		start_compile(t_coder *coder);
 void		*create_dongles(t_shared_env *shared_env);

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 06:51:58 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 07:30:55 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 		coders = create_coders(shared_env);
 		if(!coders)
 			return (1);
-		initialize_priority(shared_env->dongles, coders);
+		// initialize_priority(shared_env->dongles, coders);
 		if (create_threads(shared_env, coders) == 1)
 			free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
 					shared_env->nb_cod);

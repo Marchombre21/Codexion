@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/23 18:05:01 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 09:16:37 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,16 @@ void	check_available(long long available, t_coder *coder)
 
 	if (available == 0)
 		{
-			pthread_mutex_unlock(&coder->dongles[1].lock);
-			pthread_cond_wait(coder->cond_free, &coder->dongles[0].lock);
-			pthread_mutex_lock(&coder->dongles[1].lock);
+			pthread_mutex_unlock(&coder->dongles[1]->lock);
+			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
+			pthread_mutex_lock(&coder->dongles[1]->lock);
 		}
 	else if (available != 1)
 		{
 			get_end_cooldown(available, &ts);
-			pthread_mutex_unlock(&coder->dongles[1].lock);
-			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[0].lock, &ts);
-			pthread_mutex_lock(&coder->dongles[1].lock);
+			pthread_mutex_unlock(&coder->dongles[1]->lock);
+			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[0]->lock, &ts);
+			pthread_mutex_lock(&coder->dongles[1]->lock);
 		}
 }
 
@@ -89,12 +89,12 @@ long long	checking_available(t_coder *coder, long long cooldown)
 	long long		waited_time_1;
 	long long		waited_time_2;
 
-	if (coder->dongles[0].free && coder->dongles[1].free)
+	if (coder->dongles[0]->free && coder->dongles[1]->free)
 	{
 		if (gettimeofday(&tv, NULL) == -1)
 			return (-1);
-		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[0].released_at;
-		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[1].released_at;
+		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[0]->released_at;
+		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[1]->released_at;
 		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))
 			return (1);
 		else
@@ -112,18 +112,18 @@ long long	checking_available(t_coder *coder, long long cooldown)
 
 void	unlock_dongles(t_coder *coder)
 {
-	int	temp;
+	t_coder	*temp;
 	int	i;
 
 	i = 0;
 	while (i < 2)
 	{
-		coder->dongles[i].free = 1;
-		temp = coder->dongles[i].priority[1];
-		coder->dongles[i].priority[1] = coder->id;
-		coder->dongles[i].priority[0] = temp;
-		coder->dongles[i].released_at = get_time_now();
-		pthread_mutex_unlock(&coder->dongles[i].lock);
+		coder->dongles[i]->free = 1;
+		temp = coder->dongles[i]->priority->order[1];
+		coder->dongles[i]->priority->order[1] = coder;
+		coder->dongles[i]->priority->order[0] = temp;
+		coder->dongles[i]->released_at = get_time_now();
+		pthread_mutex_unlock(&coder->dongles[i]->lock);
 		pthread_cond_broadcast(coder->cond_free);
 		pthread_cond_broadcast(coder->cond_priority);
 		i++;
