@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 08:45:00 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 09:25:34 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*create_dongles(t_shared_env *shared_env)
 		dongles[i].released_at = (now.tv_sec * 1000LL) +
 							(now.tv_usec / 1000) + shared_env->dongle_cooldown;
 		dongles[i].priority = array_priority;
-		dongles->priority->scheduler = shared_env->scheduler;
+		dongles[i].priority->scheduler = shared_env->scheduler;
 		i++;
 	}
 	return dongles;

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 09:16:37 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 09:29:13 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	display_message(t_coder *coder, char *message, int number)
 	while(i < number)
 	{
 		current_timestamp = get_time_now() - coder->shared_env->start;
-		printf("%lld %i %s", current_timestamp, coder->id, message);
+		printf("%lld %i %s\n", current_timestamp, coder->id, message);
 		i++;
 	}
 	pthread_mutex_unlock(coder->lock_coder_data);
