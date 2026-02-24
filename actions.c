@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 09:18:42 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/24 16:23:15 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	*taking_dongles(void *coder)
 	new_coder = (t_coder *)coder;
 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
 	pthread_mutex_lock(&new_coder->dongles[1]->lock);
-	insert_priority(coder);
 	available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
 	while (1)
 	{
+		insert_priority(coder);
 		if (available == -1)
 		{
 			stop_threads(new_coder->shared_env->threads, new_coder);
@@ -35,6 +35,7 @@ void	*taking_dongles(void *coder)
 			if ((new_coder->id == new_coder->dongles[0]->priority->order[0]->id) &&
 			(new_coder->id == new_coder->dongles[1]->priority->order[0]->id))
 			{
+				printf("Enter : %lu\n", pthread_self());
 				new_coder->dongles[0]->free = 0;
 				new_coder->dongles[1]->free = 0;
 				start_compile(new_coder);
@@ -42,6 +43,7 @@ void	*taking_dongles(void *coder)
 			}
 			else
 			{
+				printf("no priority : %lu\n", pthread_self());
 				pthread_mutex_unlock(&new_coder->dongles[1]->lock);
 				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
 				pthread_mutex_lock(&new_coder->dongles[1]->lock);
@@ -65,7 +67,7 @@ void	insert_priority(t_coder *coder)
 		{
 			if (coder->dongles[i]->priority->order[0]->id != coder->id)
 			{
-				temp = coder->dongles[0]->priority->order[0];
+				temp = coder->dongles[i]->priority->order[0];
 				coder->dongles[i]->priority->order[0] = coder;
 				coder->dongles[i]->priority->order[1] = temp;
 			}
@@ -75,7 +77,7 @@ void	insert_priority(t_coder *coder)
 			result = get_time_now() - coder->dongles[i]->priority->order[0]->last_comp_time;
 			if (result < (get_time_now() - coder->last_comp_time))
 			{
-				temp = coder->dongles[0]->priority->order[0];
+				temp = coder->dongles[i]->priority->order[0];
 				coder->dongles[i]->priority->order[0] = coder;
 				coder->dongles[i]->priority->order[1] = temp;
 			}
@@ -87,14 +89,14 @@ void	insert_priority(t_coder *coder)
 void	start_refactoring(t_coder *coder)
 {
 	display_message(coder, "is refactoring", 1);
-	usleep(coder->shared_env->time_to_refactor);
+	usleep(coder->shared_env->time_to_refactor * 1000);
 	taking_dongles(coder);
 }
 
 void	start_debugging(t_coder *coder)
 {
 	display_message(coder, "is debugging", 1);
-	usleep(coder->shared_env->time_to_debug);
+	usleep(coder->shared_env->time_to_debug * 1000);
 	start_refactoring(coder);
 }
 
@@ -105,7 +107,7 @@ void	start_compile(t_coder *coder)
 {
 	display_message(coder, "has taken a dongle", 2);
 	display_message(coder, "is compiling", 1);
-	usleep(coder->shared_env->time_to_compile);
+	usleep(coder->shared_env->time_to_compile * 1000);
 	unlock_dongles(coder);
 	coder->count_compile += 1;
 	if (coder->count_compile >= coder->shared_env->number_of_compiles_required)
