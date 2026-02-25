@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 07:20:00 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 09:43:07 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ long long	checking_available(t_coder *coder, long long cooldown)
 
 void	unlock_dongles(t_coder *coder)
 {
-	t_coder	*temp;
+	// t_coder	*temp;
 	int	i;
 
 	i = 0;
@@ -132,12 +132,13 @@ void	unlock_dongles(t_coder *coder)
 		coder->dongles[i]->free = 1;
 		// printf("Unlock id 1 usb 1 : %d\n", coder->dongles[i]->priority->order[0]->id);
 		// printf("Unlock id 2 usb 1 : %d\n", coder->dongles[i]->priority->order[1]->id);
-		temp = coder->dongles[i]->priority->order[1];
-		coder->dongles[i]->priority->order[1] = coder;
-		coder->dongles[i]->priority->order[0] = temp;
+		// temp = coder->dongles[i]->priority->order[1];
+		// coder->dongles[i]->priority->order[1] = coder;
+		// coder->dongles[i]->priority->order[0] = temp;
 		// printf("Unlock id 1 usb 1 : %d\n", coder->dongles[i]->priority->order[0]->id);
 		// printf("Unlock id 2 usb 1 : %d\n", coder->dongles[i]->priority->order[1]->id);
 		coder->dongles[i]->released_at = get_time_now();
+		coder->request_time = 0;
 		pthread_mutex_unlock(&coder->dongles[i]->lock);
 		pthread_cond_broadcast(coder->cond_free);
 		pthread_cond_broadcast(coder->cond_priority);

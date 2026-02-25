@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 08:48:17 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 09:40:19 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	*create_coders(t_shared_env *shared_env)
 			coders[i].dongles[1]->priority->order[0] = &coders[i];
 		}
 		coders[i].count_compile = 0;
+		coders[i].request_time = 0;
 		coders[i].cond_free = &cond_free;
 		coders[i].cond_priority = &cond_priority;
 		coders[i].lock_coder_data = &lock_coder_data;
