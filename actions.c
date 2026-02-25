@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 10:16:13 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 11:40:26 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*taking_dongles(void *coder)
 		insert_priority(coder);
 		if (available == -1)
 		{
-			stop_threads(new_coder->shared_env->threads, new_coder);
+			write(2, "An error occurs with timestamp retrieval.", 41);
 			return NULL;
 		}
 		check_available(available, new_coder);

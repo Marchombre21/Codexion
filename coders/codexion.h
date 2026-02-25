@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 08:47:27 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 11:39:22 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ typedef struct s_shared_env
 	long long		dongle_cooldown;
 	long long		start;
 	char			*scheduler;
+	pthread_cond_t	cond_priority;
+	pthread_cond_t	cond_free;
+	pthread_mutex_t	lock_coder_data;
 	pthread_t		*threads;
 	t_dongle		*dongles;
 	pthread_mutex_t	lock_output;
@@ -72,15 +75,15 @@ typedef struct	s_coder
 }	t_coder;
 
 void		*parsing(int argc, char **args);
-void		*free_all(void *ptr[], int number, int nb_priority_array);
+void		*free_all(void *ptr[], int number, int nb_priority_array, int end);
 void		*create_coders(t_shared_env *shared_env);
 void		unlock_dongles(t_coder *coder);
-void		initialize_priority(t_dongle *dongles, t_coder *coders);
+// void		initialize_priority(t_dongle *dongles, t_coder *coders);
 void		display_message(t_coder *coder, char *message, int number);
 void		get_end_cooldown(long long waited_time, struct timespec *ts);
 long long	get_time_now();
 int			create_threads(t_shared_env *shared_env, t_coder *coders);
-void		stop_threads(pthread_t *threads, t_coder *coder);
+// void		stop_threads(pthread_t *threads, t_coder *coder);
 long long	checking_available(t_coder *coder, long long cooldown);
 void		check_available(long long available, t_coder *coder);
 void		insert_priority(t_coder *coder);
