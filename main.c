@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 17:59:26 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 19:04:56 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	*coder_routine(void *coder)
 	t_coder		*new_coder;
 
 	new_coder = (t_coder *)coder;
-	while ((new_coder->shared_env->simulation_state == 1) &&
+	while ((get_sim_state(new_coder->shared_env) == 1) &&
 	new_coder->count_compile <
 	new_coder->shared_env->number_of_compiles_required)
 	{
@@ -48,21 +48,26 @@ void	*monitor_routine(void *coders)
 
 	new_coders = (t_coder *)coders;
 	limit = new_coders[0].shared_env->time_to_burnout;
-	while (new_coders[0].shared_env->simulation_state == 1)
+	while (get_sim_state(new_coders[0].shared_env) == 1)
 	{
 		i = 0;
 		while (i < new_coders[0].shared_env->nb_cod)
 		{
 			if((get_time_now() - new_coders[i].last_comp_time) >= limit)
-				
+			{
+				set_sim_state(new_coders->shared_env, 0);
+				printf("%lld %i burned out", get_time_now(), new_coders[i].id);
+				break;
+			}
 			i++;
 		}
 	}
+	return NULL;
 }
 
 void	final(t_shared_env *shared_env, t_coder *coders)
 {
-	if (shared_env->simulation_state == 0)
+	if (get_sim_state(shared_env) == 0)
 		usleep((shared_env->time_to_compile +
 				shared_env->time_to_debug + shared_env->time_to_refactor) *
 			1000);
@@ -89,8 +94,9 @@ int main(int argc, char **argv)
 		coders = create_coders(shared_env);
 		if(!coders)
 			return (1);
-		if (create_threads(shared_env, coders) == 1)
-			final(shared_env, coders);
+		if (create_monitor(shared_env, coders) == 1)
+			if (create_threads(shared_env, coders) == 1)
+				final(shared_env, coders);
 	}
 	return (0);
 }

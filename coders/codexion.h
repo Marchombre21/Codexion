@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 16:01:21 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 19:00:46 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,14 @@ int			create_threads(t_shared_env *shared_env, t_coder *coders);
 long long	checking_available(t_coder *coder, long long cooldown);
 void		check_available(long long available, t_coder *coder);
 void		insert_priority(t_coder *coder);
+void		set_sim_state(t_shared_env *shared_env, int i);
+int			get_sim_state(t_shared_env *shared_env);
 void		*coder_routine(void *coder);
 int			taking_dongles(t_coder *coder);
 int			error_create_thread(t_shared_env *shared_env, int i);
 void		start_refactoring(t_coder *coder);
+int			create_monitor(t_shared_env *shared_env, t_coder *coders);
+void		*monitor_routine(void *coders);
 void		start_debugging(t_coder *coder);
 void		start_compile(t_coder *coder);
 void		*create_dongles(t_shared_env *shared_env);

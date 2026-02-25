@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 17:38:39 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 19:04:17 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,10 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 		i++;
 	}
 	i = 0;
-	while (shared_env->simulation_state == 1 && i < shared_env->nb_cod)
+	while (get_sim_state(shared_env) == 1 && i < shared_env->nb_cod)
 			if (pthread_join(shared_env->threads[i++], NULL) != 0)
 			{
-				shared_env->simulation_state = 0;
+				set_sim_state(shared_env, 0);
 				write(2, "An error occured with a pthread_join.\n", 38);
 			}
 	return (1);
@@ -125,5 +125,13 @@ int	create_monitor(t_shared_env *shared_env, t_coder *coders)
 						3, shared_env->nb_cod - 1, 1);
 		return (0);
 	}
-	
+	if (pthread_create(monitor, NULL, monitor_routine, &coders) != 0)
+	{
+		write(2, "The monitor can't be create.\n", 29);
+		free_all((void *[]){shared_env->dongles, coders, shared_env},
+						3, shared_env->nb_cod - 1, 1);
+		return (0);
+	}
+	else
+		return (1);
 }

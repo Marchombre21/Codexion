@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 15:39:48 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 18:47:24 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	display_message(t_coder *coder, char *message, int number)
 	int			i;
 
 	i = 0;
+	if (get_sim_state(coder->shared_env) == 0)
+	{
+		pthread_mutex_unlock(coder->lock_coder_data);
+		return ;
+	}
 	while(i < number)
 	{
 		current_timestamp = get_time_now() - coder->shared_env->start;
@@ -128,4 +133,26 @@ void	unlock_dongles(t_coder *coder)
 	}
 	pthread_cond_broadcast(coder->cond_free);
 	pthread_cond_broadcast(coder->cond_priority);
+}
+
+void	set_sim_state(t_shared_env *shared_env, int i)
+{
+	pthread_mutex_lock(&shared_env->lock_sim_state);
+	shared_env->simulation_state = i;
+	pthread_mutex_unlock(&shared_env->lock_sim_state);
+}
+
+int	get_sim_state(t_shared_env *shared_env)
+{
+	pthread_mutex_lock(&shared_env->lock_sim_state);
+	if (shared_env->simulation_state == 1)
+	{
+		pthread_mutex_unlock(&shared_env->lock_sim_state);
+		return (1);
+	}
+	else
+	{
+		pthread_mutex_unlock(&shared_env->lock_sim_state);
+		return (0);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 17:27:04 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 18:43:26 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	error_create_thread(t_shared_env *shared_env, int i)
 	int	j;
 
 	j = 0;
-	shared_env->simulation_state = 0;
+	set_sim_state(shared_env, 0);
 	while (j < i)
 		if (pthread_join(shared_env->threads[j++], NULL) != 0)
 			write(2, "An error occured with pthread_join.\n", 38);
@@ -54,7 +54,7 @@ void	*free_all(void *ptr[], int number, int nb_priority_array, int end)
 		new_env = (t_shared_env *)ptr[number - 1];
 		new_coders = (t_coder *)ptr[number - 2];
 		destroy(new_env, new_coders);
-		new_env->simulation_state = 0;
+		set_sim_state(new_env, 0);
 	}
 	while (j <= nb_priority_array)
 		free(((t_dongle *)ptr[i])[j++].priority);
