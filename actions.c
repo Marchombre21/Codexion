@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 16:23:15 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 08:14:10 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,17 @@ void	*taking_dongles(void *coder)
 	t_coder		*new_coder;
 
 	new_coder = (t_coder *)coder;
+	// if (new_coder->id % 2 != 0 || new_coder->id == new_coder->shared_env->nb_cod)
+	// {
+		//Le vrai
 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
 	pthread_mutex_lock(&new_coder->dongles[1]->lock);
+	// }
+	// else
+	// {
+	// 	pthread_mutex_lock(&new_coder->dongles[1]->lock);
+	// 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
+	// }
 	available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
 	while (1)
 	{
@@ -35,7 +44,7 @@ void	*taking_dongles(void *coder)
 			if ((new_coder->id == new_coder->dongles[0]->priority->order[0]->id) &&
 			(new_coder->id == new_coder->dongles[1]->priority->order[0]->id))
 			{
-				printf("Enter : %lu\n", pthread_self());
+				// printf("Enter : %lu\n", pthread_self());
 				new_coder->dongles[0]->free = 0;
 				new_coder->dongles[1]->free = 0;
 				start_compile(new_coder);
@@ -43,7 +52,7 @@ void	*taking_dongles(void *coder)
 			}
 			else
 			{
-				printf("no priority : %lu\n", pthread_self());
+				// printf("no priority : %lu\n", pthread_self());
 				pthread_mutex_unlock(&new_coder->dongles[1]->lock);
 				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
 				pthread_mutex_lock(&new_coder->dongles[1]->lock);

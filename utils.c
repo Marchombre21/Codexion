@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 16:23:36 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 07:20:00 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ void	check_available(long long available, t_coder *coder)
 
 	if (available == 0)
 		{
-			printf("no free : %lu\n", pthread_self());
+			// printf("no free : %lu\n", pthread_self());
 			pthread_mutex_unlock(&coder->dongles[1]->lock);
 			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
 			pthread_mutex_lock(&coder->dongles[1]->lock);
 		}
 	else if (available != 1)
 		{
-			printf("no available : %lu\n", pthread_self());
+			// printf("no available : %lu\n", pthread_self());
 			// printf("Le available:%lld\n", available);
 			get_end_cooldown(available, &ts);
 			pthread_mutex_unlock(&coder->dongles[1]->lock);
@@ -99,13 +99,13 @@ long long	checking_available(t_coder *coder, long long cooldown)
 			return (-1);
 		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[0]->released_at;
 		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[1]->released_at;
-		printf("Check available : %lu\n", pthread_self());
-		printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
-		printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
-		printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
-		printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
-		printf("Le 1 : %lld\n", waited_time_1);
-		printf("Le 2 : %lld\n", waited_time_2);
+		// printf("Check available : %lu\n", pthread_self());
+		// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
+		// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
+		// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
+		// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
+		// printf("Le 1 : %lld\n", waited_time_1);
+		// printf("Le 2 : %lld\n", waited_time_2);
 		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))
 			return (1);
 		else

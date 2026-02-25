@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 15:26:51 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 08:26:39 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,25 +80,37 @@ void	*create_coders(t_shared_env *shared_env)
 		coders[i].shared_env = shared_env;
 		coders[i].last_comp_time = get_time_now();
 		coders[i].id = i + 1;
-		if (i > 0)
+		// if (i > 0)
+		// {
+		// 	coders[i].dongles[0] = &shared_env->dongles[i];
+		// 	coders[i].dongles[1] = &shared_env->dongles[i - 1];
+		// 	coders[i].dongles[0]->priority->order[0] = &coders[i];
+		// 	coders[i].dongles[1]->priority->order[1] = &coders[i];
+		// }
+		// else
+		// {
+		// 	coders[i].dongles[0] = &shared_env->dongles[nb_max];
+		// 	coders[i].dongles[1] = &shared_env->dongles[i];
+		// 	coders[i].dongles[0]->priority->order[1] = &coders[i];
+		// 	coders[i].dongles[1]->priority->order[0] = &coders[i];
+		// }
+		if (i % 2 == 0)
 		{
 			coders[i].dongles[0] = &shared_env->dongles[i];
-			coders[i].dongles[1] = &shared_env->dongles[i - 1];
+			if (i == 0)
+				coders[i].dongles[1] = &shared_env->dongles[nb_max];
+			else
+				coders[i].dongles[1] = &shared_env->dongles[i - 1];
 			coders[i].dongles[0]->priority->order[0] = &coders[i];
 			coders[i].dongles[1]->priority->order[1] = &coders[i];
 		}
 		else
 		{
-			coders[i].dongles[0] = &shared_env->dongles[nb_max];
+			coders[i].dongles[0] = &shared_env->dongles[i - 1];
 			coders[i].dongles[1] = &shared_env->dongles[i];
 			coders[i].dongles[0]->priority->order[1] = &coders[i];
 			coders[i].dongles[1]->priority->order[0] = &coders[i];
 		}
-		// coders[i].dongles[0] = shared_env->dongles[i];
-		// if (i > 0)
-		// 	coders[i].dongles[1] = shared_env->dongles[i - 1];
-		// else
-		// 	coders[i].dongles[1] = shared_env->dongles[nb_max];
 		coders[i].count_compile = 0;
 		coders[i].cond_free = &cond_free;
 		coders[i].cond_priority = &cond_priority;
