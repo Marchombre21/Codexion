@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 08:14:10 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 09:32:05 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	*taking_dongles(void *coder)
 	// 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
 	// }
 	available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
+	new_coder->request_time = get_time_now();
 	while (1)
 	{
 		insert_priority(coder);
@@ -53,9 +54,18 @@ void	*taking_dongles(void *coder)
 			else
 			{
 				// printf("no priority : %lu\n", pthread_self());
-				pthread_mutex_unlock(&new_coder->dongles[1]->lock);
-				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
-				pthread_mutex_lock(&new_coder->dongles[1]->lock);
+				if (new_coder->id != new_coder->dongles[0]->priority->order[0]->id)
+				{
+					pthread_mutex_unlock(&new_coder->dongles[1]->lock);
+					pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
+					pthread_mutex_lock(&new_coder->dongles[1]->lock);
+				}
+				else if (new_coder->id != new_coder->dongles[1]->priority->order[0]->id)
+				{
+					pthread_mutex_unlock(&new_coder->dongles[0]->lock);
+					pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[1]->lock);
+					pthread_mutex_lock(&new_coder->dongles[0]->lock);
+				}
 			}
 		}
 		available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
@@ -74,10 +84,12 @@ void	insert_priority(t_coder *coder)
 	{
 		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
 		{
-			if (coder->dongles[i]->priority->order[0]->id != coder->id)
+			if ((coder->dongles[i]->priority->order[0]->request_time >
+				coder->dongles[i]->priority->order[1]->request_time) &&
+				coder->dongles[i]->priority->order[1]->request_time != 0)
 			{
 				temp = coder->dongles[i]->priority->order[0];
-				coder->dongles[i]->priority->order[0] = coder;
+				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
 		}

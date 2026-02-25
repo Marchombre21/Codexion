@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/24 09:10:18 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 08:47:27 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_shared_env
 typedef struct	s_coder
 {
 	long long		last_comp_time;
+	long long		request_time;
 	int				id;
 	t_dongle		*dongles[2];
 	int				count_compile;
