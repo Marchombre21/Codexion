@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 10:03:55 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 10:17:20 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,19 @@ long long	get_time_now()
 	return (ts.tv_sec * 1000LL) + (ts.tv_usec / 1000);
 }
 
-void	stop_threads(pthread_t *threads, t_coder *coder)
-{
-	int	i;
+// void	stop_threads(pthread_t *threads, t_coder *coder)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < coder->shared_env->nb_cod)
-	{
-		if (i + 1 != coder->id)
-			pthread_cancel(threads[i]);
-		i++;
-	}
-	pthread_cancel(threads[coder->id - 1]);
-}
+// 	i = 0;
+// 	while (i < coder->shared_env->nb_cod)
+// 	{
+// 		if (i + 1 != coder->id)
+// 			pthread_cancel(threads[i]);
+// 		i++;
+// 	}
+// 	pthread_cancel(threads[coder->id - 1]);
+// }
 
 /// @brief Display the message number times
 /// @param coder The coder who execute the action.
