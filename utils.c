@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 09:55:12 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 10:03:55 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,18 +72,18 @@ void	check_available(long long available, t_coder *coder)
 	if (available == 0)
 		{
 			// printf("no free : %lu\n", pthread_self());
-			if (!coder->dongles[0]->free)
-			{
-				pthread_mutex_unlock(&coder->dongles[1]->lock);
-				pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
-				pthread_mutex_lock(&coder->dongles[1]->lock);
-			}
-			else if (!coder->dongles[1]->free)
-			{
-				pthread_mutex_unlock(&coder->dongles[0]->lock);
-				pthread_cond_wait(coder->cond_free, &coder->dongles[1]->lock);
-				pthread_mutex_lock(&coder->dongles[0]->lock);
-			}
+			// if (!coder->dongles[0]->free)
+			// {
+			pthread_mutex_unlock(&coder->dongles[1]->lock);
+			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
+			pthread_mutex_lock(&coder->dongles[1]->lock);
+			// }
+			// else if (!coder->dongles[1]->free)
+			// {
+			// 	pthread_mutex_unlock(&coder->dongles[0]->lock);
+			// 	pthread_cond_wait(coder->cond_free, &coder->dongles[1]->lock);
+			// 	pthread_mutex_lock(&coder->dongles[0]->lock);
+			// }
 		}
 	else if (available != 1)
 		{
@@ -136,6 +136,7 @@ void	unlock_dongles(t_coder *coder)
 	int	i;
 
 	i = 0;
+	coder->request_time = 0;
 	while (i < 2)
 	{
 		coder->dongles[i]->free = 1;
@@ -147,10 +148,9 @@ void	unlock_dongles(t_coder *coder)
 		// printf("Unlock id 1 usb 1 : %d\n", coder->dongles[i]->priority->order[0]->id);
 		// printf("Unlock id 2 usb 1 : %d\n", coder->dongles[i]->priority->order[1]->id);
 		coder->dongles[i]->released_at = get_time_now();
-		coder->request_time = 0;
 		pthread_mutex_unlock(&coder->dongles[i]->lock);
-		pthread_cond_broadcast(coder->cond_free);
-		pthread_cond_broadcast(coder->cond_priority);
 		i++;
 	}
+	pthread_cond_broadcast(coder->cond_free);
+	pthread_cond_broadcast(coder->cond_priority);
 }

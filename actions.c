@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 09:48:41 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 10:03:30 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,18 @@ void	*taking_dongles(void *coder)
 			else
 			{
 				// printf("no priority : %lu\n", pthread_self());
-				if (new_coder->id != new_coder->dongles[0]->priority->order[0]->id)
-				{
-					pthread_mutex_unlock(&new_coder->dongles[1]->lock);
-					pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
-					pthread_mutex_lock(&new_coder->dongles[1]->lock);
-				}
-				else if (new_coder->id != new_coder->dongles[1]->priority->order[0]->id)
-				{
-					pthread_mutex_unlock(&new_coder->dongles[0]->lock);
-					pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[1]->lock);
-					pthread_mutex_lock(&new_coder->dongles[0]->lock);
-				}
+				// if (new_coder->id != new_coder->dongles[0]->priority->order[0]->id)
+				// {
+				pthread_mutex_unlock(&new_coder->dongles[1]->lock);
+				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
+				pthread_mutex_lock(&new_coder->dongles[1]->lock);
+				// }
+				// else if (new_coder->id != new_coder->dongles[1]->priority->order[0]->id)
+				// {
+				// 	pthread_mutex_unlock(&new_coder->dongles[0]->lock);
+				// 	pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[1]->lock);
+				// 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
+				// }
 			}
 		}
 		available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
