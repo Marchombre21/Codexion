@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 11:39:22 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 12:07:21 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ int			create_threads(t_shared_env *shared_env, t_coder *coders);
 long long	checking_available(t_coder *coder, long long cooldown);
 void		check_available(long long available, t_coder *coder);
 void		insert_priority(t_coder *coder);
-void		*taking_dongles(void *coder);
+void		*coder_routine(void *coder);
+int			taking_dongles(t_coder *coder);
+void		start_refactoring(t_coder *coder);
+void		start_debugging(t_coder *coder);
 void		start_compile(t_coder *coder);
 void		*create_dongles(t_shared_env *shared_env);
 

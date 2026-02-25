@@ -6,71 +6,67 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 11:40:26 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 12:06:34 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
 
-void	*taking_dongles(void *coder)
+int	taking_dongles(t_coder *coder)
 {
 	long long	available;
-	t_coder		*new_coder;
-
-	new_coder = (t_coder *)coder;
 	// if (new_coder->id % 2 != 0 || new_coder->id == new_coder->shared_env->nb_cod)
 	// {
 		//Le vrai
-	pthread_mutex_lock(&new_coder->dongles[0]->lock);
-	pthread_mutex_lock(&new_coder->dongles[1]->lock);
+	pthread_mutex_lock(&coder->dongles[0]->lock);
+	pthread_mutex_lock(&coder->dongles[1]->lock);
 	// }
 	// else
 	// {
-	// 	pthread_mutex_lock(&new_coder->dongles[1]->lock);
-	// 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
+	// 	pthread_mutex_lock(&coder->dongles[1]->lock);
+	// 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	// }
-	available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
-	new_coder->request_time = get_time_now();
+	available = checking_available(coder, coder->shared_env->dongle_cooldown);
+	coder->request_time = get_time_now();
 	while (1)
 	{
 		insert_priority(coder);
 		if (available == -1)
 		{
 			write(2, "An error occurs with timestamp retrieval.", 41);
-			return NULL;
+			return (0);
 		}
-		check_available(available, new_coder);
+		check_available(available, coder);
 		if (available == 1)
 		{
-			if ((new_coder->id == new_coder->dongles[0]->priority->order[0]->id) &&
-			(new_coder->id == new_coder->dongles[1]->priority->order[0]->id))
+			if ((coder->id == coder->dongles[0]->priority->order[0]->id) &&
+			(coder->id == coder->dongles[1]->priority->order[0]->id))
 			{
 				// printf("Enter : %lu\n", pthread_self());
-				new_coder->dongles[0]->free = 0;
-				new_coder->dongles[1]->free = 0;
-				start_compile(new_coder);
-				return NULL;
+				coder->dongles[0]->free = 0;
+				coder->dongles[1]->free = 0;
+				return (1);
 			}
 			else
 			{
 				// printf("no priority : %lu\n", pthread_self());
-				// if (new_coder->id != new_coder->dongles[0]->priority->order[0]->id)
+				// if (coder->id != coder->dongles[0]->priority->order[0]->id)
 				// {
-				pthread_mutex_unlock(&new_coder->dongles[1]->lock);
-				pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[0]->lock);
-				pthread_mutex_lock(&new_coder->dongles[1]->lock);
+				pthread_mutex_unlock(&coder->dongles[1]->lock);
+				pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
+				pthread_mutex_lock(&coder->dongles[1]->lock);
 				// }
-				// else if (new_coder->id != new_coder->dongles[1]->priority->order[0]->id)
+				// else if (coder->id != coder->dongles[1]->priority->order[0]->id)
 				// {
-				// 	pthread_mutex_unlock(&new_coder->dongles[0]->lock);
-				// 	pthread_cond_wait(new_coder->cond_priority, &new_coder->dongles[1]->lock);
-				// 	pthread_mutex_lock(&new_coder->dongles[0]->lock);
+				// 	pthread_mutex_unlock(&coder->dongles[0]->lock);
+				// 	pthread_cond_wait(coder->cond_priority, &coder->dongles[1]->lock);
+				// 	pthread_mutex_lock(&coder->dongles[0]->lock);
 				// }
 			}
 		}
-		available = checking_available(new_coder, new_coder->shared_env->dongle_cooldown);
+		available = checking_available(coder, coder->shared_env->dongle_cooldown);
 	}
-	return NULL;
+	return (0);
 }
 
 void	insert_priority(t_coder *coder)
@@ -112,8 +108,6 @@ void	start_refactoring(t_coder *coder)
 {
 	display_message(coder, "is refactoring", 1);
 	usleep(coder->shared_env->time_to_refactor * 1000);
-	if (coder->count_compile < coder->shared_env->number_of_compiles_required)
-		taking_dongles(coder);
 }
 
 void	start_debugging(t_coder *coder)
@@ -134,7 +128,6 @@ void	start_compile(t_coder *coder)
 	unlock_dongles(coder);
 	coder->count_compile += 1;
 	coder->last_comp_time = get_time_now();
-	start_debugging(coder);
 }
 
 

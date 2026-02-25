@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 11:34:08 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 12:07:26 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 	while (i < shared_env->nb_cod)
 	{
 		//Rajouter des gestions d'erreurs ici.
-		pthread_create(&shared_env->threads[i], NULL, taking_dongles,
+		pthread_create(&shared_env->threads[i], NULL, coder_routine,
 						&coders[i]);
 		i++;
 	}
