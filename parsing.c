@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 10:40:10 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 17:14:19 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,12 @@ void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env->nb_cod = args_array[0];
 	shared_env->start = get_time_now();
 	shared_env->time_to_burnout = args_array[1];
+	shared_env->simulation_state = 1;
 	shared_env->time_to_compile = args_array[2];
 	pthread_cond_init(&shared_env->cond_priority, NULL);
 	pthread_cond_init(&shared_env->cond_free, NULL);
 	pthread_mutex_init(&shared_env->lock_coder_data, NULL);
+	pthread_mutex_init(&shared_env->lock_sim_state, NULL);
 	shared_env->time_to_debug = args_array[3];
 	shared_env->time_to_refactor = args_array[4];
 	shared_env->number_of_compiles_required = args_array[5];

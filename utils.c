@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 10:17:20 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 15:39:48 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,8 @@ long long	get_time_now()
 	struct timeval ts;
 
 	gettimeofday(&ts, NULL);
-	// printf("Time now: %lld\n", (ts.tv_sec * 1000LL) + (ts.tv_usec / 1000));
 	return (ts.tv_sec * 1000LL) + (ts.tv_usec / 1000);
 }
-
-// void	stop_threads(pthread_t *threads, t_coder *coder)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < coder->shared_env->nb_cod)
-// 	{
-// 		if (i + 1 != coder->id)
-// 			pthread_cancel(threads[i]);
-// 		i++;
-// 	}
-// 	pthread_cancel(threads[coder->id - 1]);
-// }
 
 /// @brief Display the message number times
 /// @param coder The coder who execute the action.
@@ -72,23 +57,13 @@ void	check_available(long long available, t_coder *coder)
 	if (available == 0)
 		{
 			// printf("no free : %lu\n", pthread_self());
-			// if (!coder->dongles[0]->free)
-			// {
 			pthread_mutex_unlock(&coder->dongles[1]->lock);
 			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
 			pthread_mutex_lock(&coder->dongles[1]->lock);
-			// }
-			// else if (!coder->dongles[1]->free)
-			// {
-			// 	pthread_mutex_unlock(&coder->dongles[0]->lock);
-			// 	pthread_cond_wait(coder->cond_free, &coder->dongles[1]->lock);
-			// 	pthread_mutex_lock(&coder->dongles[0]->lock);
-			// }
 		}
 	else if (available != 1)
 		{
 			// printf("no available : %lu\n", pthread_self());
-			// printf("Le available:%lld\n", available);
 			get_end_cooldown(available, &ts);
 			pthread_mutex_unlock(&coder->dongles[1]->lock);
 			pthread_cond_timedwait(&coder->cond_available, &coder->dongles[0]->lock, &ts);

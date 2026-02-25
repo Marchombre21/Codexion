@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 12:06:34 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 15:54:53 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,8 @@
 int	taking_dongles(t_coder *coder)
 {
 	long long	available;
-	// if (new_coder->id % 2 != 0 || new_coder->id == new_coder->shared_env->nb_cod)
-	// {
-		//Le vrai
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
-	// }
-	// else
-	// {
-	// 	pthread_mutex_lock(&coder->dongles[1]->lock);
-	// 	pthread_mutex_lock(&coder->dongles[0]->lock);
-	// }
 	available = checking_available(coder, coder->shared_env->dongle_cooldown);
 	coder->request_time = get_time_now();
 	while (1)
@@ -50,18 +41,9 @@ int	taking_dongles(t_coder *coder)
 			else
 			{
 				// printf("no priority : %lu\n", pthread_self());
-				// if (coder->id != coder->dongles[0]->priority->order[0]->id)
-				// {
 				pthread_mutex_unlock(&coder->dongles[1]->lock);
 				pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
 				pthread_mutex_lock(&coder->dongles[1]->lock);
-				// }
-				// else if (coder->id != coder->dongles[1]->priority->order[0]->id)
-				// {
-				// 	pthread_mutex_unlock(&coder->dongles[0]->lock);
-				// 	pthread_cond_wait(coder->cond_priority, &coder->dongles[1]->lock);
-				// 	pthread_mutex_lock(&coder->dongles[0]->lock);
-				// }
 			}
 		}
 		available = checking_available(coder, coder->shared_env->dongle_cooldown);
@@ -72,7 +54,7 @@ int	taking_dongles(t_coder *coder)
 void	insert_priority(t_coder *coder)
 {
 	int			i;
-	long long	result;
+	// long long	result;
 	t_coder		*temp;
 
 	i = 0;
@@ -92,13 +74,25 @@ void	insert_priority(t_coder *coder)
 		}
 		else
 		{
-			result = get_time_now() - coder->dongles[i]->priority->order[0]->last_comp_time;
-			if (result < (get_time_now() - coder->last_comp_time))
+			// result = get_time_now() - coder->dongles[i]->priority->order[0]->last_comp_time;
+			// printf("%lld\n", coder->dongles[i]->priority->order[0]->last_comp_time);
+			// printf("%lld\n", coder->dongles[i]->priority->order[1]->last_comp_time);
+			if (coder->dongles[i]->priority->order[0]->last_comp_time >
+			coder->dongles[i]->priority->order[1]->last_comp_time)
+			// if (result < (get_time_now() - coder->last_comp_time))
 			{
 				temp = coder->dongles[i]->priority->order[0];
-				coder->dongles[i]->priority->order[0] = coder;
+				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
+			// else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
+			// coder->dongles[i]->priority->order[1]->last_comp_time)
+			// 	if(coder->dongles[i]->priority->order[0]->id != coder->id)
+			// 	{
+			// 		temp = coder->dongles[i]->priority->order[0];
+			// 		coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
+			// 		coder->dongles[i]->priority->order[1] = temp;
+			// 	}
 		}
 		i++;
 	}
