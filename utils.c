@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 09:43:07 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 09:55:12 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,18 @@ void	check_available(long long available, t_coder *coder)
 	if (available == 0)
 		{
 			// printf("no free : %lu\n", pthread_self());
-			pthread_mutex_unlock(&coder->dongles[1]->lock);
-			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
-			pthread_mutex_lock(&coder->dongles[1]->lock);
+			if (!coder->dongles[0]->free)
+			{
+				pthread_mutex_unlock(&coder->dongles[1]->lock);
+				pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
+				pthread_mutex_lock(&coder->dongles[1]->lock);
+			}
+			else if (!coder->dongles[1]->free)
+			{
+				pthread_mutex_unlock(&coder->dongles[0]->lock);
+				pthread_cond_wait(coder->cond_free, &coder->dongles[1]->lock);
+				pthread_mutex_lock(&coder->dongles[0]->lock);
+			}
 		}
 	else if (available != 1)
 		{

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 09:32:05 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/25 09:48:41 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,10 @@ void	insert_priority(t_coder *coder)
 	{
 		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
 		{
-			if ((coder->dongles[i]->priority->order[0]->request_time >
+			if (coder->dongles[i]->priority->order[0]->request_time == 0 ||
+				((coder->dongles[i]->priority->order[0]->request_time >
 				coder->dongles[i]->priority->order[1]->request_time) &&
-				coder->dongles[i]->priority->order[1]->request_time != 0)
+				coder->dongles[i]->priority->order[1]->request_time != 0))
 			{
 				temp = coder->dongles[i]->priority->order[0];
 				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
