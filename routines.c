@@ -6,11 +6,21 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 14:15:16 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 14:59:50 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static void	*burning(t_coder *coder)
+{
+	set_sim_state(coder->shared_env, 0);
+	printf("%lld %i burned out\n", get_time_now() -
+			coder->shared_env->start, coder->id);
+	pthread_cond_broadcast(&coder->shared_env->cond_free);
+	pthread_cond_broadcast(&coder->shared_env->cond_priority);
+	return NULL;
+}
 
 void	*coder_routine(void *coder)
 {
@@ -39,21 +49,15 @@ void	*monitor_routine(void *coders)
 
 	new_coders = (t_coder *)coders;
 	limit = new_coders[0].shared_env->time_to_burnout;
-	while (get_sim_state(new_coders[0].shared_env) == 1)
+	while (get_sim_state(new_coders[0].shared_env) == 1 &&
+			!get_finish_stats(new_coders, new_coders[0].shared_env->nb_cod))
 	{
 		i = 0;
 		while (i < new_coders[0].shared_env->nb_cod)
 		{
 			if((get_time_now() - get_comp_time(&new_coders[i])) >= limit &&
-				new_coders[i].count_compile <
-				new_coders[i].shared_env->number_of_compiles_required)
-			{
-				set_sim_state(new_coders[0].shared_env, 0);
-				printf("%lld %i burned out\n", get_time_now() - new_coders[0].shared_env->start, new_coders[i].id);
-				pthread_cond_broadcast(&new_coders[0].shared_env->cond_free);
-				pthread_cond_broadcast(&new_coders[0].shared_env->cond_priority);
-				return NULL;
-			}
+				!get_finish(&new_coders[i]))
+				burning(&new_coders[i]);
 			i++;
 		}
 		usleep(1000);

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:55:55 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:26:06 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,13 @@ typedef struct	s_coder
 	long long		last_comp_time;
 	long long		request_time;
 	int				id;
+	int				finish;
 	t_dongle		*dongles[2];
 	int				count_compile;
 	t_shared_env	*shared_env;
 	pthread_mutex_t	*lock_coder_data;
 	pthread_mutex_t	lock_coder_time;
+	pthread_mutex_t	lock_coder_request;
 	pthread_cond_t	*cond_priority;
 	pthread_cond_t	cond_available;
 	pthread_cond_t	*cond_free;
@@ -86,6 +88,9 @@ void		get_end_cooldown(long long waited_time, struct timespec *ts);
 long long	get_time_now();
 // int			priority_ok(t_coder *coder);
 // void		priority_ko(t_coder *coder);
+long long	get_request(t_coder *coder);
+void		set_request(t_coder *coder, long long time);
+int			stop_taking_dongles(t_coder *coder);
 int			create_threads(t_shared_env *shared_env, t_coder *coders);
 long long	check_availability(t_coder *coder, long long cooldown);
 void		check_res_available(long long available, t_coder *coder);
@@ -95,6 +100,9 @@ void		fifo(t_coder *coder, int i, t_coder *temp);
 void		set_sim_state(t_shared_env *shared_env, int i);
 int			get_sim_state(t_shared_env *shared_env);
 int			check_priority(t_coder *coder);
+int			get_finish_stats(t_coder *coders, int nb);
+void		set_finish(t_coder *coder);
+int			get_finish(t_coder *coder);
 void		*monitor_routine(void *coders);
 int			init_threads(t_shared_env *shared_env, t_coder *coders, int i);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);

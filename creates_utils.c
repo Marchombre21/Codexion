@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:29:59 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:50:05 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 14:41:32 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i)
 	coders[i].shared_env = shared_env;
 	coders[i].last_comp_time = get_time_now();
 	coders[i].id = i + 1;
+	coders[i].finish = 0;
 	coders[i].count_compile = 0;
 	coders[i].request_time = 0;
 	coders[i].cond_free = &shared_env->cond_free;

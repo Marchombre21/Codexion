@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:55:05 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:33:51 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ int	taking_dongles(t_coder *coder)
 	long long	available;
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
+	set_request(coder, get_time_now());
 	available = check_availability(coder, coder->shared_env->dongle_cd);
-	coder->request_time = get_time_now();
 	while (1)
 	{
+		if (get_sim_state(coder->shared_env) != 1)
+			return (stop_taking_dongles(coder));
 		insert_priority(coder);
 		if (available == -1)
 		{
@@ -80,4 +82,6 @@ void	start_compile(t_coder *coder)
 	usleep(coder->shared_env->time_to_compile * 1000);
 	unlock_dongles(coder);
 	coder->count_compile += 1;
+	if (coder->count_compile >= coder->shared_env->number_of_compiles_required)
+		set_finish(coder);
 }

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 14:02:40 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:26:37 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ void	get_end_cooldown(long long waited_time, struct timespec *ts)
 // 	pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
 // 	pthread_mutex_lock(&coder->dongles[1]->lock);
 // }
+
+int	stop_taking_dongles(t_coder *coder)
+{
+	pthread_mutex_unlock(&coder->dongles[1]->lock);
+	pthread_mutex_unlock(&coder->dongles[0]->lock);
+	return (0);
+}
 
 void	check_res_available(long long available, t_coder *coder)
 {
@@ -115,7 +122,7 @@ void	unlock_dongles(t_coder *coder)
 	int	i;
 
 	i = 0;
-	coder->request_time = 0;
+	set_request(coder, 0);
 	while (i < 2)
 	{
 		coder->dongles[i]->free = 1;

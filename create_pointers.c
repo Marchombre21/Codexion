@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:47:14 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:19:57 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	*create_coders(t_shared_env *shared_env)
 		init_dongles_priority(shared_env, coders, i, nb_max);
 		init_coders_stats(shared_env, coders, i);
 		pthread_mutex_init(&coders[i].lock_coder_time, NULL);
+		pthread_mutex_init(&coders[i].lock_coder_request, NULL);
 		pthread_cond_init(&coders[i].cond_available, NULL);
 		i++;
 	}
@@ -75,17 +76,17 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 	i = 0;
 	if (init_threads(shared_env, coders, i) == 1)
 	{
-		if (pthread_join(*shared_env->monitor, NULL) != 0)
-		{
-			set_sim_state(shared_env, 0);
-			write(2, "An error occured with a pthread_join.\n", 38);
-		}
 		while (get_sim_state(shared_env) != 2 && i < shared_env->nb_cod)
 			if (pthread_join(shared_env->threads[i++], NULL) != 0)
 			{
 				set_sim_state(shared_env, 0);
 				write(2, "An error occured with a pthread_join.\n", 38);
 			}
+		if (pthread_join(*shared_env->monitor, NULL) != 0)
+		{
+			set_sim_state(shared_env, 0);
+			write(2, "An error occured with a pthread_join.\n", 38);
+		}
 	}
 	else
 		return (0);
