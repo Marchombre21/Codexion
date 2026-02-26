@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:55:40 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 09:11:24 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,6 @@ long long	checking_available(t_coder *coder, long long cooldown)
 		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[0]->released_at;
 		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) - coder->dongles[1]->released_at;
 		// printf("Check available : %lu\n", pthread_self());
-		// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
-		// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
-		// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
-		// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
 		// printf("Le 1 : %lld\n", waited_time_1);
 		// printf("Le 2 : %lld\n", waited_time_2);
 		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))

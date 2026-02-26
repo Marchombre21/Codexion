@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:38:45 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 10:09:32 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_shared_env
 	pthread_cond_t	cond_priority;
 	pthread_cond_t	cond_free;
 	pthread_mutex_t	lock_coder_data;
+	pthread_t		*monitor;
 	pthread_t		*threads;
 	t_dongle		*dongles;
 	// pthread_mutex_t	lock_output;

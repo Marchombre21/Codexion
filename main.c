@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 08:07:56 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 10:37:14 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*monitor_routine(void *coders)
 			if((get_time_now() - get_comp_time(&new_coders[i])) >= limit)
 			{
 				set_sim_state(new_coders[0].shared_env, 0);
-				printf("%lld %i burned out", get_time_now(), new_coders[i].id);
+				printf("%lld %i burned out\n", get_time_now() - new_coders[0].shared_env->start, new_coders[i].id);
 				pthread_cond_broadcast(&new_coders[0].shared_env->cond_free);
 				pthread_cond_broadcast(&new_coders[0].shared_env->cond_priority);
 				return NULL;
@@ -75,7 +75,7 @@ void	final(t_shared_env *shared_env, t_coder *coders)
 				shared_env->time_to_debug + shared_env->time_to_refactor) *
 			1000);
 	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
-			shared_env->nb_cod, 1);
+			shared_env->nb_cod - 1, 1);
 }
 
 int main(int argc, char **argv)

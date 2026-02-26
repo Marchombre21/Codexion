@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:56:03 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 09:36:48 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ void	insert_priority(t_coder *coder)
 	t_coder		*temp;
 
 	i = 0;
+	// printf("Check priority : %lu\n", pthread_self());
+	// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
+	// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
+	// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
+	// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
 	while (i < 2)
 	{
 		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
@@ -85,17 +90,21 @@ void	insert_priority(t_coder *coder)
 				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
-			// else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
-			// coder->dongles[i]->priority->order[1]->last_comp_time)
-			// 	if(coder->dongles[i]->priority->order[0]->id != coder->id)
-			// 	{
-			// 		temp = coder->dongles[i]->priority->order[0];
-			// 		coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
-			// 		coder->dongles[i]->priority->order[1] = temp;
-			// 	}
+			else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
+			coder->dongles[i]->priority->order[1]->last_comp_time)
+				if(coder->dongles[i]->priority->order[0]->id % 2 != 0)
+				{
+					temp = coder->dongles[i]->priority->order[0];
+					coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
+					coder->dongles[i]->priority->order[1] = temp;
+				}
 		}
 		i++;
 	}
+	// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
+	// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
+	// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
+	// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
 }
 
 void	start_refactoring(t_coder *coder)
@@ -108,7 +117,6 @@ void	start_debugging(t_coder *coder)
 {
 	display_message(coder, "is debugging", 1);
 	usleep(coder->shared_env->time_to_debug * 1000);
-	start_refactoring(coder);
 }
 
 /// @brief Display messages, wait for the time_to_compile time and unlock
@@ -118,10 +126,10 @@ void	start_compile(t_coder *coder)
 {
 	display_message(coder, "has taken a dongle", 2);
 	display_message(coder, "is compiling", 1);
+	set_comp_time(coder, get_time_now());
 	usleep(coder->shared_env->time_to_compile * 1000);
 	unlock_dongles(coder);
 	coder->count_compile += 1;
-	set_comp_time(coder, get_time_now());
 }
 
 

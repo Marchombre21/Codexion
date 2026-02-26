@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 17:14:19 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 11:19:28 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	*create_shared_env(int args_array[], char *scheduler)
 {
 	t_shared_env *shared_env;
 
+	// shared_env = NULL;
 	shared_env = malloc(sizeof(t_shared_env));
 	if (!shared_env)
 		return NULL;
