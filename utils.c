@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 09:11:24 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 12:54:47 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,21 @@ void	get_end_cooldown(long long waited_time, struct timespec *ts)
 	ts->tv_nsec = (waited_time % 1000) * 1000000;
 }
 
-void	check_available(long long available, t_coder *coder)
+int	priority_ok(t_coder *coder)
+{
+	coder->dongles[0]->free = 0;
+	coder->dongles[1]->free = 0;
+	return (1);
+}
+
+void	priority_ko(t_coder *coder)
+{
+	pthread_mutex_unlock(&coder->dongles[1]->lock);
+	pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
+	pthread_mutex_lock(&coder->dongles[1]->lock);
+}
+
+void	check_res_available(long long available, t_coder *coder)
 {
 	struct timespec	ts;
 
@@ -76,7 +90,7 @@ void	check_available(long long available, t_coder *coder)
 		}
 }
 
-long long	checking_available(t_coder *coder, long long cooldown)
+long long	check_availability(t_coder *coder, long long cooldown)
 {
 	struct timeval 	tv;
 	long long		waited_time_1;

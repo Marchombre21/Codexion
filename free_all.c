@@ -6,11 +6,21 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 10:59:38 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 11:55:17 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
+
+void	final(t_shared_env *shared_env, t_coder *coders)
+{
+	if (get_sim_state(shared_env) == 0)
+		usleep((shared_env->time_to_compile +
+				shared_env->time_to_debug + shared_env->time_to_refactor) *
+			1000);
+	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
+			shared_env->nb_cod - 1, 1);
+}
 
 int	error_create_thread(t_shared_env *shared_env, int i)
 {

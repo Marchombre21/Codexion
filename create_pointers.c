@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 11:02:07 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:09:11 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,13 @@ void	*create_dongles(t_shared_env *shared_env)
 		// array_priority = NULL;
 		array_priority = malloc(sizeof(t_priority));
 		if (!array_priority)
-			//Vérifier le i - 1
 			return free_all((void*[]){shared_env->dongles, shared_env}, 2, i - 1, 0);
 		//Not sure if it does what I want
 		memset(array_priority->order, 0, 2);
 		pthread_mutex_init(&shared_env->dongles[i].lock, NULL);
 		shared_env->dongles[i].free = 1;
 		shared_env->dongles[i].released_at = (now.tv_sec * 1000LL) +
-							(now.tv_usec / 1000) - shared_env->dongle_cooldown;
+							(now.tv_usec / 1000) - shared_env->dongle_cd;
 		shared_env->dongles[i].priority = array_priority;
 		shared_env->dongles[i].priority->scheduler = shared_env->scheduler;
 		i++;

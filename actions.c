@@ -6,18 +6,39 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 09:36:48 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:06:44 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
 
+static void	insert_priority(t_coder *coder)
+{
+	int			i;
+	t_coder		*temp;
+
+	i = 0;
+	temp = NULL;
+	while (i < 2)
+	{
+		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
+			fifo(coder, i, temp);
+		else
+			edf(coder, i, temp);
+		i++;
+	}
+}
+/// @brief Locks the mutexes and checks if dongles are availables
+/// If they aren't run the cond_wait or the timed_wait. If they are availables,
+/// check the priority queue and adapt its behavior.
+/// @param coder The coder who try to use the dongle.
+/// @return 1 if he can, 0 if not.
 int	taking_dongles(t_coder *coder)
 {
 	long long	available;
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
-	available = checking_available(coder, coder->shared_env->dongle_cooldown);
+	available = check_availability(coder, coder->shared_env->dongle_cd);
 	coder->request_time = get_time_now();
 	while (1)
 	{
@@ -27,84 +48,18 @@ int	taking_dongles(t_coder *coder)
 			write(2, "An error occurs with timestamp retrieval.", 41);
 			return (0);
 		}
-		check_available(available, coder);
+		check_res_available(available, coder);
 		if (available == 1)
 		{
 			if ((coder->id == coder->dongles[0]->priority->order[0]->id) &&
 			(coder->id == coder->dongles[1]->priority->order[0]->id))
-			{
-				// printf("Enter : %lu\n", pthread_self());
-				coder->dongles[0]->free = 0;
-				coder->dongles[1]->free = 0;
-				return (1);
-			}
+				return (priority_ok(coder));
 			else
-			{
-				// printf("no priority : %lu\n", pthread_self());
-				pthread_mutex_unlock(&coder->dongles[1]->lock);
-				pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
-				pthread_mutex_lock(&coder->dongles[1]->lock);
-			}
+				priority_ko(coder);
 		}
-		available = checking_available(coder, coder->shared_env->dongle_cooldown);
+		available = check_availability(coder, coder->shared_env->dongle_cd);
 	}
 	return (0);
-}
-
-void	insert_priority(t_coder *coder)
-{
-	int			i;
-	// long long	result;
-	t_coder		*temp;
-
-	i = 0;
-	// printf("Check priority : %lu\n", pthread_self());
-	// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
-	// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
-	// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
-	// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
-	while (i < 2)
-	{
-		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
-		{
-			if (coder->dongles[i]->priority->order[0]->request_time == 0 ||
-				((coder->dongles[i]->priority->order[0]->request_time >
-				coder->dongles[i]->priority->order[1]->request_time) &&
-				coder->dongles[i]->priority->order[1]->request_time != 0))
-			{
-				temp = coder->dongles[i]->priority->order[0];
-				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
-				coder->dongles[i]->priority->order[1] = temp;
-			}
-		}
-		else
-		{
-			// result = get_time_now() - coder->dongles[i]->priority->order[0]->last_comp_time;
-			// printf("%lld\n", coder->dongles[i]->priority->order[0]->last_comp_time);
-			// printf("%lld\n", coder->dongles[i]->priority->order[1]->last_comp_time);
-			if (get_comp_time(coder->dongles[i]->priority->order[0]) >
-			get_comp_time(coder->dongles[i]->priority->order[1]))
-			// if (result < (get_time_now() - coder->last_comp_time))
-			{
-				temp = coder->dongles[i]->priority->order[0];
-				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
-				coder->dongles[i]->priority->order[1] = temp;
-			}
-			else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
-			coder->dongles[i]->priority->order[1]->last_comp_time)
-				if(coder->dongles[i]->priority->order[0]->id % 2 != 0)
-				{
-					temp = coder->dongles[i]->priority->order[0];
-					coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
-					coder->dongles[i]->priority->order[1] = temp;
-				}
-		}
-		i++;
-	}
-	// printf("id 1 usb 1 : %d\n", coder->dongles[0]->priority->order[0]->id);
-	// printf("id 2 usb 1 : %d\n", coder->dongles[0]->priority->order[1]->id);
-	// printf("id 1 usb 2 : %d\n", coder->dongles[1]->priority->order[0]->id);
-	// printf("id 2 usb 2 : %d\n", coder->dongles[1]->priority->order[1]->id);
 }
 
 void	start_refactoring(t_coder *coder)
@@ -131,5 +86,3 @@ void	start_compile(t_coder *coder)
 	unlock_dongles(coder);
 	coder->count_compile += 1;
 }
-
-

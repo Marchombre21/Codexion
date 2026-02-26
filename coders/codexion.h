@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 10:09:32 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:00:30 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_shared_env
 	int				time_to_debug;
 	int				time_to_refactor;
 	int				number_of_compiles_required;
-	long long		dongle_cooldown;
+	long long		dongle_cd;
 	long long		start;
 	char			*scheduler;
 	pthread_cond_t	cond_priority;
@@ -55,7 +55,6 @@ typedef struct s_shared_env
 	pthread_t		*monitor;
 	pthread_t		*threads;
 	t_dongle		*dongles;
-	// pthread_mutex_t	lock_output;
 	pthread_mutex_t	lock_sim_state;
 	int				simulation_state;
 	
@@ -85,18 +84,23 @@ void		unlock_dongles(t_coder *coder);
 void		display_message(t_coder *coder, char *message, int number);
 void		get_end_cooldown(long long waited_time, struct timespec *ts);
 long long	get_time_now();
+int			priority_ok(t_coder *coder);
+void		priority_ko(t_coder *coder);
 int			create_threads(t_shared_env *shared_env, t_coder *coders);
-long long	checking_available(t_coder *coder, long long cooldown);
-void		check_available(long long available, t_coder *coder);
-void		insert_priority(t_coder *coder);
+long long	check_availability(t_coder *coder, long long cooldown);
+void		check_res_available(long long available, t_coder *coder);
+void		*coder_routine(void *coder);
+void		edf(t_coder *coder, int i, t_coder *temp);
+void		fifo(t_coder *coder, int i, t_coder *temp);
+// void		insert_priority(t_coder *coder);
 void		set_sim_state(t_shared_env *shared_env, int i);
 int			get_sim_state(t_shared_env *shared_env);
-void		*coder_routine(void *coder);
+void		*monitor_routine(void *coders);
 int			taking_dongles(t_coder *coder);
 int			error_create_thread(t_shared_env *shared_env, int i);
 void		start_refactoring(t_coder *coder);
 int			create_monitor(t_shared_env *shared_env, t_coder *coders);
-void		*monitor_routine(void *coders);
+void		final(t_shared_env *shared_env, t_coder *coders);
 void		start_debugging(t_coder *coder);
 void		start_compile(t_coder *coder);
 void		*create_dongles(t_shared_env *shared_env);

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 11:19:28 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:00:30 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env->time_to_debug = args_array[3];
 	shared_env->time_to_refactor = args_array[4];
 	shared_env->number_of_compiles_required = args_array[5];
-	shared_env->dongle_cooldown = args_array[6];
+	shared_env->dongle_cd = args_array[6];
 	shared_env->scheduler = scheduler;
 	return shared_env;
 }
