@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 19:04:17 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:38:52 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	*create_coders(t_shared_env *shared_env)
 		coders[i].cond_free = &shared_env->cond_free;
 		coders[i].cond_priority = &shared_env->cond_priority;
 		coders[i].lock_coder_data = &shared_env->lock_coder_data;
+		pthread_mutex_init(&coders[i].lock_coder_time, NULL);
 		pthread_cond_init(&coders[i].cond_available, NULL);
 		i++;
 	}

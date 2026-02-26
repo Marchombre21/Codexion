@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 15:54:53 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:43:12 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,16 @@ void	insert_priority(t_coder *coder)
 			// result = get_time_now() - coder->dongles[i]->priority->order[0]->last_comp_time;
 			// printf("%lld\n", coder->dongles[i]->priority->order[0]->last_comp_time);
 			// printf("%lld\n", coder->dongles[i]->priority->order[1]->last_comp_time);
-			if (coder->dongles[i]->priority->order[0]->last_comp_time >
-			coder->dongles[i]->priority->order[1]->last_comp_time)
+			if (get_comp_time(coder->dongles[i]->priority->order[0]) >
+			get_comp_time(coder->dongles[i]->priority->order[1]))
 			// if (result < (get_time_now() - coder->last_comp_time))
 			{
 				temp = coder->dongles[i]->priority->order[0];
 				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
+			pthread_mutex_unlock(&coder->dongles[i]->priority->order[0]->lock_coder_time);
+			pthread_mutex_unlock(&coder->dongles[i]->priority->order[1]->lock_coder_time);
 			// else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
 			// coder->dongles[i]->priority->order[1]->last_comp_time)
 			// 	if(coder->dongles[i]->priority->order[0]->id != coder->id)
@@ -121,7 +123,7 @@ void	start_compile(t_coder *coder)
 	usleep(coder->shared_env->time_to_compile * 1000);
 	unlock_dongles(coder);
 	coder->count_compile += 1;
-	coder->last_comp_time = get_time_now();
+	set_comp_time(coder, get_time_now());
 }
 
 

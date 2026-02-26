@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 19:04:56 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:45:31 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,14 @@ void	*monitor_routine(void *coders)
 		i = 0;
 		while (i < new_coders[0].shared_env->nb_cod)
 		{
-			if((get_time_now() - new_coders[i].last_comp_time) >= limit)
+			if((get_time_now() - get_comp_time(&new_coders[i])) >= limit)
 			{
-				set_sim_state(new_coders->shared_env, 0);
+				pthread_mutex_unlock(&new_coders[i].lock_coder_time);
+				set_sim_state(new_coders[0].shared_env, 0);
 				printf("%lld %i burned out", get_time_now(), new_coders[i].id);
 				break;
 			}
+			pthread_mutex_unlock(&new_coders[i].lock_coder_time);
 			i++;
 		}
 	}

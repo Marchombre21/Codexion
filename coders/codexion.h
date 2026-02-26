@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/25 19:00:46 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:38:45 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct	s_coder
 	int				count_compile;
 	t_shared_env	*shared_env;
 	pthread_mutex_t	*lock_coder_data;
+	pthread_mutex_t	lock_coder_time;
 	pthread_cond_t	*cond_priority;
 	pthread_cond_t	cond_available;
 	pthread_cond_t	*cond_free;
@@ -76,6 +77,8 @@ typedef struct	s_coder
 
 void		*parsing(int argc, char **args);
 void		*free_all(void *ptr[], int number, int nb_priority_array, int end);
+long long	get_comp_time(t_coder *coder);
+void		set_comp_time(t_coder *coder, long long comp_time);
 void		*create_coders(t_shared_env *shared_env);
 void		unlock_dongles(t_coder *coder);
 void		display_message(t_coder *coder, char *message, int number);
