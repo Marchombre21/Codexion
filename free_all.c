@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 17:51:21 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 18:02:10 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 void	final(t_shared_env *shared_env, t_coder *coders)
 {
-	if (get_sim_state(shared_env) == 0)
-		usleep((shared_env->time_to_compile +
-				shared_env->time_to_debug + shared_env->time_to_refactor) *
-			1000);
 	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
 			shared_env->nb_cod - 1, 1);
 }
