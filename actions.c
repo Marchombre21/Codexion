@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 16:51:39 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 17:44:56 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	taking_dongles(t_coder *coder)
 			return (0);
 		}
 		check_res_available(available, coder);
-		if (available == 1)
+		if (available == -2)
 			if (check_priority(coder) == 1)
 				return (1);
 		available = check_availability(coder, coder->shared_env->dongle_cd);
@@ -51,7 +51,6 @@ void	start_refactoring(t_coder *coder)
 
 void	start_debugging(t_coder *coder)
 {
-	display_message(coder, "is debugging", 1);
 	usleep(coder->shared_env->time_to_debug * 1000);
 }
 
@@ -64,6 +63,7 @@ void	start_compile(t_coder *coder)
 	display_message(coder, "is compiling", 1);
 	set_comp_time(coder, get_time_now());
 	usleep(coder->shared_env->time_to_compile * 1000);
+	display_message(coder, "is debugging", 1);
 	unlock_dongles(coder);
 	coder->count_compile += 1;
 	if (coder->count_compile >= coder->shared_env->number_of_compiles_required)

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:50:47 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 16:52:46 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 17:21:50 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	check_res_available(long long available, t_coder *coder)
 			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
 			pthread_mutex_lock(&coder->dongles[1]->lock);
 		}
-	else if (available != 1)
+	else if (available != -2)
 		{
 			set_request(coder, 0);
 			insert_priority(coder);
@@ -68,7 +68,7 @@ long long	check_availability(t_coder *coder, long long cooldown)
 		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) -
 							coder->dongles[1]->released_at;
 		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))
-			return (1);
+			return (-2);
 		else
 		{
 			if (waited_time_1 < waited_time_2)
