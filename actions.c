@@ -6,28 +6,12 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 15:33:51 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 16:51:39 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
 
-static void	insert_priority(t_coder *coder)
-{
-	int			i;
-	t_coder		*temp;
-
-	i = 0;
-	temp = NULL;
-	while (i < 2)
-	{
-		if (strcmp(coder->dongles[0]->priority->scheduler, "fifo") == 0)
-			fifo(coder, i, temp);
-		else
-			edf(coder, i, temp);
-		i++;
-	}
-}
 /// @brief Locks the mutexes and checks if dongles are availables
 /// If they aren't run the cond_wait or the timed_wait. If they are availables,
 /// check the priority queue and adapt its behavior.
@@ -38,12 +22,12 @@ int	taking_dongles(t_coder *coder)
 	long long	available;
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
-	set_request(coder, get_time_now());
 	available = check_availability(coder, coder->shared_env->dongle_cd);
 	while (1)
 	{
 		if (get_sim_state(coder->shared_env) != 1)
 			return (stop_taking_dongles(coder));
+		set_request(coder, get_time_now());
 		insert_priority(coder);
 		if (available == -1)
 		{

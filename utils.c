@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 15:26:37 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 16:51:14 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,55 +67,6 @@ int	stop_taking_dongles(t_coder *coder)
 	pthread_mutex_unlock(&coder->dongles[0]->lock);
 	return (0);
 }
-
-void	check_res_available(long long available, t_coder *coder)
-{
-	struct timespec	ts;
-
-	if (available == 0)
-		{
-			pthread_mutex_unlock(&coder->dongles[1]->lock);
-			pthread_cond_wait(coder->cond_free, &coder->dongles[0]->lock);
-			pthread_mutex_lock(&coder->dongles[1]->lock);
-		}
-	else if (available != 1)
-		{
-			get_end_cooldown(available, &ts);
-			pthread_mutex_unlock(&coder->dongles[1]->lock);
-			pthread_cond_timedwait(&coder->cond_available,
-									&coder->dongles[0]->lock, &ts);
-			pthread_mutex_lock(&coder->dongles[1]->lock);
-		}
-}
-
-long long	check_availability(t_coder *coder, long long cooldown)
-{
-	struct timeval 	tv;
-	long long		waited_time_1;
-	long long		waited_time_2;
-
-	if (coder->dongles[0]->free && coder->dongles[1]->free)
-	{
-		if (gettimeofday(&tv, NULL) == -1)
-			return (-1);
-		waited_time_1 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) -
-							coder->dongles[0]->released_at;
-		waited_time_2 = ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000)) -
-							coder->dongles[1]->released_at;
-		if ((waited_time_1 >= cooldown) && (waited_time_2 >= cooldown))
-			return (1);
-		else
-		{
-			if (waited_time_1 < waited_time_2)
-				return (cooldown - waited_time_1);
-			else
-				return (cooldown - waited_time_2);
-		}
-	}
-	else
-		return (0);
-}
-
 
 void	unlock_dongles(t_coder *coder)
 {

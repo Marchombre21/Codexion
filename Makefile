@@ -6,7 +6,7 @@
 #    By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/26 11:03:39 by bfitte            #+#    #+#              #
-#    Updated: 2026/02/26 15:00:46 by bfitte           ###   ########lyon.fr    #
+#    Updated: 2026/02/26 16:55:20 by bfitte           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ RM := rm -f
 
 CC := cc
 
-FLAGS := -Wall -Werror -Wextra -pthread -I $(INCLUDE)
+FLAGS := -Wall -Werror -Wextra -pthread
+
+FINCLUDE := -I $(INCLUDE)
 
 TFLAG := -fsanitize=thread
 
@@ -39,6 +41,7 @@ SRC_FILES := actions.c\
 	priority_utils.c\
 	routines.c\
 	creates_utils.c\
+	actions_utils.c\
 	get_set.c\
 	get_set2.c\
 
@@ -48,22 +51,22 @@ DEPS := $(patsubst %.o, %.d, $(OBJ))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(FINCLUDE) $(OBJ) -o $(NAME)
 
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
-	$(CC) $(FLAGS) $(DEPFLAGS) -c $< -o $@
+	$(CC) $(FLAGS) $(FINCLUDE) $(DEPFLAGS) -c $< -o $@
 
 $(BUILD_DIR):
 	mkdir -p $@
 
 thread: fclean $(OBJ)
-	$(CC) $(FLAGS) $(TFLAG) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(TFLAG) $(FINCLUDE) $(OBJ) -o $(NAME)
 
 address: fclean $(OBJ)
-	$(CC) $(FLAGS) $(AFLAG) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(AFLAG) $(FINCLUDE) $(OBJ) -o $(NAME)
 
 val: fclean $(OBJ)
-	$(CC) $(FLAGS) $(GFLAG) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(GFLAG) $(FINCLUDE) $(OBJ) -o $(NAME)
 
 clean:
 	$(RM) $(OBJ) $(DEPS)

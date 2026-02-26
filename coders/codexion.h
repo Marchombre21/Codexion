@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 15:26:06 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 16:52:02 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int			check_priority(t_coder *coder);
 int			get_finish_stats(t_coder *coders, int nb);
 void		set_finish(t_coder *coder);
 int			get_finish(t_coder *coder);
+void		insert_priority(t_coder *coder);
 void		*monitor_routine(void *coders);
 int			init_threads(t_shared_env *shared_env, t_coder *coders, int i);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
