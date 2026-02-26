@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:00:30 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:55:55 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,23 @@ void		unlock_dongles(t_coder *coder);
 void		display_message(t_coder *coder, char *message, int number);
 void		get_end_cooldown(long long waited_time, struct timespec *ts);
 long long	get_time_now();
-int			priority_ok(t_coder *coder);
-void		priority_ko(t_coder *coder);
+// int			priority_ok(t_coder *coder);
+// void		priority_ko(t_coder *coder);
 int			create_threads(t_shared_env *shared_env, t_coder *coders);
 long long	check_availability(t_coder *coder, long long cooldown);
 void		check_res_available(long long available, t_coder *coder);
 void		*coder_routine(void *coder);
 void		edf(t_coder *coder, int i, t_coder *temp);
 void		fifo(t_coder *coder, int i, t_coder *temp);
-// void		insert_priority(t_coder *coder);
 void		set_sim_state(t_shared_env *shared_env, int i);
 int			get_sim_state(t_shared_env *shared_env);
+int			check_priority(t_coder *coder);
 void		*monitor_routine(void *coders);
+int			init_threads(t_shared_env *shared_env, t_coder *coders, int i);
+void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
 int			taking_dongles(t_coder *coder);
+void		init_dongles_priority(t_shared_env *shared_env, t_coder *coders,
+								int i, int nb_max);
 int			error_create_thread(t_shared_env *shared_env, int i);
 void		start_refactoring(t_coder *coder);
 int			create_monitor(t_shared_env *shared_env, t_coder *coders);

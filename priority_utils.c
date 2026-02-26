@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 12:09:33 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 14:02:47 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,22 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 					coder->dongles[i]->priority->order[1];
 					coder->dongles[i]->priority->order[1] = temp;
 				}
+}
+
+int	check_priority(t_coder *coder)
+{
+	if ((coder->id == coder->dongles[0]->priority->order[0]->id) &&
+			(coder->id == coder->dongles[1]->priority->order[0]->id))
+	{
+		coder->dongles[0]->free = 0;
+		coder->dongles[1]->free = 0;
+		return (1);
+	}
+	else
+	{
+		pthread_mutex_unlock(&coder->dongles[1]->lock);
+		pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
+		pthread_mutex_lock(&coder->dongles[1]->lock);
+		return (0);
+	}
 }

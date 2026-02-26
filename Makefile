@@ -6,7 +6,7 @@
 #    By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/26 11:03:39 by bfitte            #+#    #+#              #
-#    Updated: 2026/02/26 12:07:26 by bfitte           ###   ########lyon.fr    #
+#    Updated: 2026/02/26 14:03:12 by bfitte           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ SRC_FILES := actions.c\
 	utils.c\
 	priority_utils.c\
 	routines.c\
+	creates_utils.c\
+	get_set.c\
 
 OBJ := $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
 DEPS := $(patsubst %.o, %.d, $(OBJ))

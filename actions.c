@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:06:44 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 13:55:05 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,8 @@ int	taking_dongles(t_coder *coder)
 		}
 		check_res_available(available, coder);
 		if (available == 1)
-		{
-			if ((coder->id == coder->dongles[0]->priority->order[0]->id) &&
-			(coder->id == coder->dongles[1]->priority->order[0]->id))
-				return (priority_ok(coder));
-			else
-				priority_ko(coder);
-		}
+			if (check_priority(coder) == 1)
+				return (1);
 		available = check_availability(coder, coder->shared_env->dongle_cd);
 	}
 	return (0);
