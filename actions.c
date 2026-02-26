@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:43:12 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:56:03 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ void	insert_priority(t_coder *coder)
 				coder->dongles[i]->priority->order[0] = coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
-			pthread_mutex_unlock(&coder->dongles[i]->priority->order[0]->lock_coder_time);
-			pthread_mutex_unlock(&coder->dongles[i]->priority->order[1]->lock_coder_time);
 			// else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
 			// coder->dongles[i]->priority->order[1]->last_comp_time)
 			// 	if(coder->dongles[i]->priority->order[0]->id != coder->id)

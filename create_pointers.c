@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:38:52 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:53:07 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	create_monitor(t_shared_env *shared_env, t_coder *coders)
 						3, shared_env->nb_cod - 1, 1);
 		return (0);
 	}
-	if (pthread_create(monitor, NULL, monitor_routine, &coders) != 0)
+	if (pthread_create(monitor, NULL, monitor_routine, coders) != 0)
 	{
 		write(2, "The monitor can't be create.\n", 29);
 		free_all((void *[]){shared_env->dongles, coders, shared_env},

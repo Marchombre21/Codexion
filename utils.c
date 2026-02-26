@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 07:41:01 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 07:55:40 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,10 @@ void	set_comp_time(t_coder *coder, long long comp_time)
 
 long long	get_comp_time(t_coder *coder)
 {
+	long long	time;
+
 	pthread_mutex_lock(&coder->lock_coder_time);
-	return coder->last_comp_time;
+	time = coder->last_comp_time;
+	pthread_mutex_unlock(&coder->lock_coder_time);
+	return time;
 }
