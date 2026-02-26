@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 13:00:30 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 16:23:07 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int final_check_input(int i, char *nptr)
 			return (1);
 		i++;
 	}
-	if (result == 0)
-		return (1);
+	// if (result == 0)
+	// 	return (1);
 	return (0);
 }
 
@@ -88,7 +88,7 @@ void	*parsing(int argc, char **args)
 		else
 		{
 			printf("All arguments (except the last one) must be valid and"
-				 "positive integers.");
+				 " positive integers.");
 			return NULL;
 		}
 		i++;

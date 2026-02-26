@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 14:59:50 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:47:27 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*monitor_routine(void *coders)
 		{
 			if((get_time_now() - get_comp_time(&new_coders[i])) >= limit &&
 				!get_finish(&new_coders[i]))
-				burning(&new_coders[i]);
+				return burning(&new_coders[i]);
 			i++;
 		}
 		usleep(1000);

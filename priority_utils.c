@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 15:41:26 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/26 15:57:03 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	fifo(t_coder *coder, int i, t_coder *temp)
 
 void	edf(t_coder *coder, int i, t_coder *temp)
 {
-	// printf("Premier: %lld\n", get_request(coder->dongles[i]->priority->order[0]));
-	// printf("Deuxieme: %lld\n", get_request(coder->dongles[i]->priority->order[1]));
 	if (get_request(coder->dongles[i]->priority->order[0]) == 0 ||
 		(get_request(coder->dongles[i]->priority->order[1]) != 0 &&
 		get_comp_time(coder->dongles[i]->priority->order[0]) >
@@ -40,15 +38,15 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 				coder->dongles[i]->priority->order[1];
 				coder->dongles[i]->priority->order[1] = temp;
 			}
-			else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
-			coder->dongles[i]->priority->order[1]->last_comp_time)
-				if(coder->dongles[i]->priority->order[0]->id % 2 != 0)
-				{
-					temp = coder->dongles[i]->priority->order[0];
-					coder->dongles[i]->priority->order[0] =
-					coder->dongles[i]->priority->order[1];
-					coder->dongles[i]->priority->order[1] = temp;
-				}
+			// else if (coder->dongles[i]->priority->order[0]->last_comp_time ==
+			// coder->dongles[i]->priority->order[1]->last_comp_time)
+			// 	if(coder->dongles[i]->priority->order[0]->id % 2 != 0)
+			// 	{
+			// 		temp = coder->dongles[i]->priority->order[0];
+			// 		coder->dongles[i]->priority->order[0] =
+			// 		coder->dongles[i]->priority->order[1];
+			// 		coder->dongles[i]->priority->order[1] = temp;
+			// 	}
 }
 
 int	check_priority(t_coder *coder)
