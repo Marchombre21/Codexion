@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:50:47 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:05:35 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 11:00:23 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ void	check_res_available(long long available, t_coder *coder)
 	}
 }
 
+/// @brief Check if the coder's dongles are free and if their cooldown ends
+/// @param coder The coder who attempt to take the dongles.
+/// @param cooldown The dongles's cooldown
+/// @return -1 if gettimeofday fails, -2 if all is good, a long long equal to
+/// the time to wait.
 long long	check_availability(t_coder *coder, long long cooldown)
 {
 	struct timeval	tv;

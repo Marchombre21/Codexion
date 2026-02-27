@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:35:25 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 12:56:17 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
 	{
 		pthread_cond_destroy(&new_coders[i].cond_available);
 		pthread_mutex_destroy(&new_coders[i].lock_coder_time);
+		pthread_mutex_destroy(&new_coders[i].lock_coder_finish);
 		pthread_mutex_destroy(&new_coders[i].lock_coder_request);
 		pthread_mutex_destroy(&new_env->dongles[i++].lock);
 	}

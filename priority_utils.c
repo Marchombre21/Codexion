@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:48:59 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 11:06:00 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,18 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 	long long	now;
 	long long	request_time_0;
 	long long	request_time_1;
+	long long	comp_0;
+	long long	comp_1;
 
 	now = get_time_now();
 	request_time_0 = get_request(coder->dongles[i]->priority->order[0]);
 	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
-	if (request_time_0 == 0 || request_time_0 > now
-		|| (request_time_1 != 0 && request_time_1 <= now
-			&& get_comp_time(coder->dongles[i]->priority->order[0])
-			> get_comp_time(coder->dongles[i]->priority->order[1])))
+	comp_0 = get_comp_time(coder->dongles[i]->priority->order[0]);
+	comp_1 = get_comp_time(coder->dongles[i]->priority->order[1]);
+	if (request_time_0 == 0
+		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 > comp_1)
+		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 == comp_1
+			&& request_time_0 > now))
 	{
 		temp = coder->dongles[i]->priority->order[0];
 		coder->dongles[i]->priority->order[0]

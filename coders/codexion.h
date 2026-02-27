@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:31:37 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 12:52:15 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_coder
 	int				count_compile;
 	t_shared_env	*shared_env;
 	pthread_mutex_t	*lock_coder_data;
+	pthread_mutex_t	lock_coder_finish;
 	pthread_mutex_t	lock_coder_time;
 	pthread_mutex_t	lock_coder_request;
 	pthread_cond_t	*cond_priority;
