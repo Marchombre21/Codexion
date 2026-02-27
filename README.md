@@ -58,12 +58,19 @@ The display function is blocked by a mutex. When an encoder wants to announce an
 
 **Resource locking :** Each dongle has its own mutex (dongles[i].lock) guaranteeing exclusive access to the resource.
 
-**Data protection (Data Races) :** Other mutexes isolate sensitive variables. lock_coder_time protects the last compilation time, lock_coder_request protects the access to the request_time value, and lock_coder_data secures the finish status and access to standard output.
+**Data protection (Data Races) :** Other mutexes isolate sensitive variables. lock_coder_time protects the last compilation time, lock_coder_request protects the access to the request_time value, lock_coder_data secures the access to standard output and lock_coder_finish secures the access to the finish variable.
 
-**Global state :** lock_sim_state secures the reading and modification of the simulation state (in progress, finished, or error).
+**Global state :** lock_sim_state secures the reading and modification of the simulation state.
 
+#### The conditions :
 
+Waiting for a cooldown uses ```cond_free``` via ```pthread_cond_wait```, suspending the thread until the release signal (pthread_cond_broadcast).
 
+Cooldown time management uses ```cond_available``` via ```pthread_cond_timedwait```. The thread is put to sleep for the exact duration of the wait time calculated by ```get_end_cooldown```.
+
+Priority conflicts trigger a wait on the ```cond_priority``` condition. The release signal is called when the dongles are released.
+
+![Three coders with 100 compiling, 200 cooldown and fifo](schemas/codexion-stats(1).png)
 ## Resources
 
 - **Threads**: (https://www.codequoi.com/threads-mutex-et-programmation-concurrente-en-c/#cr%C3%A9er-un-thread) / (https://www.geeksforgeeks.org/c/multithreading-in-c/)
