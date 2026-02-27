@@ -6,11 +6,11 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:47:45 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 18:57:32 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coders/codexion.h"
+#include "codexion.h"
 
 /// @brief Locks the mutexes and checks if dongles are availables
 /// If they aren't run the cond_wait or the timed_wait. If they are availables,
@@ -22,6 +22,8 @@ int	taking_dongles(t_coder *coder)
 	long long	available;
 
 	pthread_mutex_lock(&coder->dongles[0]->lock);
+	if (&coder->dongles[0]->lock == &coder->dongles[1]->lock)
+		just_one(coder);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
 	available = check_availability(coder, coder->shared_env->dongle_cd);
 	while (1)
@@ -66,7 +68,7 @@ void	start_compile(t_coder *coder)
 	usleep(coder->shared_env->time_to_compile * 1000);
 	display_message(coder, "is debugging", 1);
 	unlock_dongles(coder);
-	coder->count_compile += 1;
-	if (coder->count_compile >= coder->shared_env->number_of_compiles_required)
+	set_count_comp(coder);
+	if (get_count_comp(coder) >= coder->shared_env->number_of_compiles_required)
 		set_finish(coder);
 }

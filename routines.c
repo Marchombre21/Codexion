@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:27:09 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:26:50 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,12 @@ void	*coder_routine(void *coder)
 	t_coder		*new_coder;
 
 	new_coder = (t_coder *)coder;
+	while (get_sim_state(new_coder->shared_env) != 1)
+		usleep(100);
+	if (get_sim_state(new_coder->shared_env) == 2)
+		return (NULL);
 	while ((get_sim_state(new_coder->shared_env) == 1)
-		&& new_coder->count_compile
+		&& get_count_comp(new_coder)
 		< new_coder->shared_env->number_of_compiles_required)
 	{
 		if (taking_dongles(new_coder) == 1)
@@ -48,8 +52,12 @@ void	*monitor_routine(void *coders)
 	t_coder		*new_coders;
 	long long	limit;
 	int			i;
-
+	
 	new_coders = (t_coder *)coders;
+	while (get_sim_state(new_coders[0].shared_env) != 1)
+		usleep(100);
+	if (get_sim_state(new_coders[0].shared_env) == 2)
+		return (NULL);
 	limit = new_coders[0].shared_env->time_to_burnout;
 	while (get_sim_state(new_coders[0].shared_env) == 1
 		&& !get_finish_stats(new_coders, new_coders[0].shared_env->nb_cod))

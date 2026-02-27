@@ -6,11 +6,11 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 13:53:59 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:26:04 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coders/codexion.h"
+#include "codexion.h"
 
 void	final(t_shared_env *shared_env, t_coder *coders)
 {
@@ -20,7 +20,7 @@ void	final(t_shared_env *shared_env, t_coder *coders)
 	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
 		shared_env->nb_cod - 1, 1);
 	if (i)
-		printf("All compilations are completed, nobody died.\n");
+		printf("All requested compilations are completed, nobody died.\n");
 }
 
 static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
@@ -32,6 +32,7 @@ static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
 	{
 		pthread_cond_destroy(&new_coders[i].cond_available);
 		pthread_mutex_destroy(&new_coders[i].lock_coder_time);
+		pthread_mutex_destroy(&new_coders[i].lock_coder_count);
 		pthread_mutex_destroy(&new_coders[i].lock_coder_finish);
 		pthread_mutex_destroy(&new_coders[i].lock_coder_request);
 		pthread_mutex_destroy(&new_env->dongles[i++].lock);
@@ -62,7 +63,8 @@ void	*free_all(void *ptr[], int number, int nb_priority_array, int end)
 		new_coders = (t_coder *)ptr[number - 2];
 		set_sim_state(new_env, 0);
 		if (end == 2)
-			pthread_join(*new_env->monitor, NULL);
+			if (pthread_join(*new_env->monitor, NULL) != 0)
+				write(2, "An error occured with pthread_join.\n", 38);
 		destroy(new_env, new_coders, end);
 	}
 	while (j <= nb_priority_array)

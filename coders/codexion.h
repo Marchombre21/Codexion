@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 12:52:15 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:23:19 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef struct s_coder
 	pthread_mutex_t	*lock_coder_data;
 	pthread_mutex_t	lock_coder_finish;
 	pthread_mutex_t	lock_coder_time;
+	pthread_mutex_t	lock_coder_count;
 	pthread_mutex_t	lock_coder_request;
 	pthread_cond_t	*cond_priority;
 	pthread_cond_t	cond_available;
@@ -91,6 +92,8 @@ int			check_priority(t_coder *coder);
 // Parsing
 void		*parsing(int argc, char **args);
 // Get_set
+int			get_count_comp(t_coder *coder);
+void		set_count_comp(t_coder *coder);
 long long	get_time_now(void);
 long long	get_request(t_coder *coder);
 void		set_sim_state(t_shared_env *shared_env, int i);
@@ -105,9 +108,9 @@ void		set_comp_time(t_coder *coder, long long comp_time);
 void		*free_all(void *ptr[], int number, int nb_priority_array, int end);
 void		final(t_shared_env *shared_env, t_coder *coders);
 // Create_utils
-int			init_threads(t_shared_env *shared_env, t_coder *coders, int i);
+int			init_threads(t_shared_env *shared_env, t_coder *coders, int *i);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
-int			error_create_thread(t_shared_env *shared_env, int i);
+int			error_create_thread(t_shared_env *shared_env, t_coder *coders, int i);
 void		init_dongles_priority(t_shared_env *shared_env, t_coder *coders,
 				int i, int nb_max);
 // Create_pointers
@@ -121,6 +124,7 @@ void		start_debugging(t_coder *coder);
 void		start_compile(t_coder *coder);
 int			taking_dongles(t_coder *coder);
 // Actions_utils
+void		just_one(t_coder *coder);
 long long	check_availability(t_coder *coder, long long cooldown);
 void		check_res_available(long long available, t_coder *coder);
 void		insert_priority(t_coder *coder);

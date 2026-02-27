@@ -6,11 +6,17 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:25:16 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 19:09:35 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coders/codexion.h"
+#include "codexion.h"
+
+static void	*no_coders(void)
+{
+	printf("At least one coder must be present\n");
+	return (NULL);
+}
 
 static int	final_check_input(int i, char *nptr)
 {
@@ -51,13 +57,15 @@ static void	*create_shared_env(int args_array[], char *scheduler)
 {
 	t_shared_env	*shared_env;
 
+	if (args_array[0] == 0)
+		return (no_coders());
 	shared_env = malloc(sizeof(t_shared_env));
 	if (!shared_env)
 		return (NULL);
 	shared_env->nb_cod = args_array[0];
 	shared_env->start = get_time_now();
 	shared_env->time_to_burnout = args_array[1];
-	shared_env->simulation_state = 1;
+	shared_env->simulation_state = 0;
 	shared_env->time_to_compile = args_array[2];
 	pthread_cond_init(&shared_env->cond_priority, NULL);
 	pthread_cond_init(&shared_env->cond_free, NULL);

@@ -6,11 +6,11 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 12:52:46 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:23:38 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coders/codexion.h"
+#include "codexion.h"
 
 void	*create_dongles(t_shared_env *shared_env)
 {
@@ -57,6 +57,7 @@ void	*create_coders(t_shared_env *shared_env)
 		init_dongles_priority(shared_env, coders, i, nb_max);
 		init_coders_stats(shared_env, coders, i);
 		pthread_mutex_init(&coders[i].lock_coder_time, NULL);
+		pthread_mutex_init(&coders[i].lock_coder_count, NULL);
 		pthread_mutex_init(&coders[i].lock_coder_request, NULL);
 		pthread_mutex_init(&coders[i].lock_coder_finish, NULL);
 		pthread_cond_init(&coders[i].cond_available, NULL);
@@ -70,8 +71,10 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 	int	i;
 
 	i = 0;
-	if (init_threads(shared_env, coders, i) == 1)
+	if (init_threads(shared_env, coders, &i) == 1)
 	{
+		set_sim_state(shared_env, 1);
+		i = 0;
 		while (get_sim_state(shared_env) != 2 && i < shared_env->nb_cod)
 		{
 			if (pthread_join(shared_env->threads[i++], NULL) != 0)
@@ -87,7 +90,7 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 		}
 	}
 	else
-		return (0);
+		return (error_create_thread(shared_env, coders, i));
 	return (1);
 }
 

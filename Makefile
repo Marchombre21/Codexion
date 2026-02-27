@@ -6,7 +6,7 @@
 #    By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/26 11:03:39 by bfitte            #+#    #+#              #
-#    Updated: 2026/02/27 14:07:05 by bfitte           ###   ########lyon.fr    #
+#    Updated: 2026/02/27 18:55:00 by bfitte           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC_FILES := actions.c\
 	actions_utils.c\
 	get_set.c\
 	get_set2.c\
+	get_set3.c\
 
 OBJ := $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
 DEPS := $(patsubst %.o, %.d, $(OBJ))
@@ -45,7 +46,7 @@ DEPS := $(patsubst %.o, %.d, $(OBJ))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(FINCLUDE) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(FINCLUDE) $(OBJ) -o $@
 
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 	$(CC) $(FLAGS) $(FINCLUDE) $(DEPFLAGS) -c $< -o $@
