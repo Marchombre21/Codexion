@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:40:17 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:19:56 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,16 @@
 
 void	fifo(t_coder *coder, int i, t_coder *temp)
 {
-	if (get_request(coder->dongles[i]->priority->order[0]) == 0
-		|| ((get_request(coder->dongles[i]->priority->order[0])
-				> get_request(coder->dongles[i]->priority->order[1]))
-			&& get_request(coder->dongles[i]->priority->order[1]) != 0))
+	long long	now;
+	long long	request_time_0;
+	long long	request_time_1;
+
+	now = get_time_now();
+	request_time_0 = get_request(coder->dongles[i]->priority->order[0]);
+	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
+	if (request_time_0 == 0 || request_time_0 > now
+		|| ((request_time_0 > request_time_1) && request_time_1 != 0
+		&& request_time_1 <= now))
 	{
 		temp = coder->dongles[i]->priority->order[0];
 		coder->dongles[i]->priority->order[0]
@@ -28,8 +34,14 @@ void	fifo(t_coder *coder, int i, t_coder *temp)
 
 void	edf(t_coder *coder, int i, t_coder *temp)
 {
+	long long	now;
+	long long	request_time_1;
+
+	now = get_time_now();
+	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
 	if (get_request(coder->dongles[i]->priority->order[0]) == 0
-		|| (get_request(coder->dongles[i]->priority->order[1]) != 0
+		|| coder->dongles[i]->priority->order[0]->request_time > now
+		|| (request_time_1 != 0 && request_time_1 <= now
 			&& get_comp_time(coder->dongles[i]->priority->order[0])
 			> get_comp_time(coder->dongles[i]->priority->order[1])))
 	{

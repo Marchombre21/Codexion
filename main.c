@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 09:23:42 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:04:22 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	main(int argc, char **argv)
 			if (create_threads(shared_env, coders) == 1)
 				free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
 					shared_env->nb_cod - 1, 1);
-					
 	}
 	return (0);
 }

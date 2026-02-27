@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:50:47 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:45:18 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:05:35 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	check_res_available(long long available, t_coder *coder)
 	}
 	else if (available != -2)
 	{
-		set_request(coder, 0);
+		set_request(coder, get_time_now() + available);
 		insert_priority(coder);
 		get_end_cooldown(available, &ts);
 		pthread_mutex_unlock(&coder->dongles[1]->lock);
