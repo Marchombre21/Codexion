@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 12:56:17 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 13:53:59 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	final(t_shared_env *shared_env, t_coder *coders)
 
 	i = shared_env->simulation_state;
 	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
-			shared_env->nb_cod - 1, 1);
+		shared_env->nb_cod - 1, 1);
 	if (i)
 		printf("All compilations are completed, nobody died.\n");
 }

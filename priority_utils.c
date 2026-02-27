@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 11:06:00 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 13:54:15 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	fifo(t_coder *coder, int i, t_coder *temp)
 	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
 	if (request_time_0 == 0 || request_time_0 > now
 		|| ((request_time_0 > request_time_1) && request_time_1 != 0
-		&& request_time_1 <= now))
+			&& request_time_1 <= now))
 	{
 		temp = coder->dongles[i]->priority->order[0];
 		coder->dongles[i]->priority->order[0]
