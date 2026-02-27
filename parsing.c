@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 19:09:35 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:42:10 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env->start = get_time_now();
 	shared_env->time_to_burnout = args_array[1];
 	shared_env->simulation_state = 0;
+	shared_env->threads = NULL;
 	shared_env->time_to_compile = args_array[2];
 	pthread_cond_init(&shared_env->cond_priority, NULL);
 	pthread_cond_init(&shared_env->cond_free, NULL);

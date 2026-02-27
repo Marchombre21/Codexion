@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:29:59 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:32:41 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:49:13 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	init_threads(t_shared_env *shared_env, t_coder *coders, int *i)
 	shared_env->threads = malloc(sizeof(pthread_t) * shared_env->nb_cod);
 	if (!shared_env->threads)
 	{
+		set_sim_state(shared_env, 2);
 		free_all((void *[]){shared_env->dongles, coders, shared_env},
 			3, shared_env->nb_cod - 1, 2);
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:23:38 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:43:55 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	create_monitor(t_shared_env *shared_env, t_coder *coders)
 	if (!shared_env->monitor)
 	{
 		free_all((void *[]){shared_env->dongles, coders, shared_env},
-			3, shared_env->nb_cod - 1, 3);
+			3, shared_env->nb_cod - 1, 1);
 		return (0);
 	}
 	if (pthread_create(shared_env->monitor, NULL, monitor_routine, coders) != 0)

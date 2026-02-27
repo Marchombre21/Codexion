@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:26:50 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:36:46 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*coder_routine(void *coder)
 	t_coder		*new_coder;
 
 	new_coder = (t_coder *)coder;
-	while (get_sim_state(new_coder->shared_env) != 1)
+	while (get_sim_state(new_coder->shared_env) == 0)
 		usleep(100);
 	if (get_sim_state(new_coder->shared_env) == 2)
 		return (NULL);
@@ -54,7 +54,7 @@ void	*monitor_routine(void *coders)
 	int			i;
 	
 	new_coders = (t_coder *)coders;
-	while (get_sim_state(new_coders[0].shared_env) != 1)
+	while (get_sim_state(new_coders[0].shared_env) == 0)
 		usleep(100);
 	if (get_sim_state(new_coders[0].shared_env) == 2)
 		return (NULL);

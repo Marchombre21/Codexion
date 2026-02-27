@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:26:04 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 20:49:39 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	final(t_shared_env *shared_env, t_coder *coders)
 		printf("All requested compilations are completed, nobody died.\n");
 }
 
-static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
+static void	destroy(t_shared_env *new_env, t_coder *new_coders)
 {
 	int	i;
 
@@ -41,11 +41,8 @@ static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
 	pthread_mutex_destroy(&new_env->lock_sim_state);
 	pthread_cond_destroy(&new_env->cond_free);
 	pthread_cond_destroy(&new_env->cond_priority);
-	if (end != 3)
-	{
-		free(new_env->threads);
-		free(new_env->monitor);
-	}
+	free(new_env->threads);
+	free(new_env->monitor);
 }
 
 void	*free_all(void *ptr[], int number, int nb_priority_array, int end)
@@ -61,11 +58,12 @@ void	*free_all(void *ptr[], int number, int nb_priority_array, int end)
 	{
 		new_env = (t_shared_env *)ptr[number - 1];
 		new_coders = (t_coder *)ptr[number - 2];
-		set_sim_state(new_env, 0);
+		if (end != 2)
+			set_sim_state(new_env, 0);
 		if (end == 2)
 			if (pthread_join(*new_env->monitor, NULL) != 0)
 				write(2, "An error occured with pthread_join.\n", 38);
-		destroy(new_env, new_coders, end);
+		destroy(new_env, new_coders);
 	}
 	while (j <= nb_priority_array)
 		free(((t_dongle *)ptr[i])[j++].priority);
