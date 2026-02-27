@@ -70,7 +70,13 @@ Cooldown time management uses ```cond_available``` via ```pthread_cond_timedwait
 
 Priority conflicts trigger a wait on the ```cond_priority``` condition. The release signal is called when the dongles are released.
 
-![Three coders with 100 compiling, 200 cooldown and fifo](schemas/codexion-stats(1).png)
+#### Examples:
+
+![Three coders with 1500 burnout, 100 compiling, 200 cooldown and fifo](https://github.com/Marchombre21/Codexion/raw/main/schemas/codexion-stats(1).png)
+
+Here, coder 1 starts by locking key 1 and key 3. Then, since we are in FIFO mode and he is the first to request them, he is granted access and starts compiling. When coder 2 wanted to take key 1, it was already locked and he had to wait for it to become available. The same applies to coder 3 with key 3. At 100 ms, compilation is complete and the keys are released. At the end of their cooldown (200 ms), coder 2 was faster than coder 3 and therefore took the keys. Coder 3 returns to wait. And so on until all have completed the two requested compilations.
+
+![Three coders with 500 burnout, 100 compiling, 200 cooldown and fifo](https://github.com/Marchombre21/Codexion/raw/main/schemas/codexion-stats(1).png)
 ## Resources
 
 - **Threads**: (https://www.codequoi.com/threads-mutex-et-programmation-concurrente-en-c/#cr%C3%A9er-un-thread) / (https://www.geeksforgeeks.org/c/multithreading-in-c/)
