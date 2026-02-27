@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 11:56:22 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 09:23:42 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,30 @@ static int	num_args(int number)
 	return (0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_coder			*coders;
 	t_shared_env	*shared_env;
 	void			*error;
 
 	if (argc != 9)
-		return num_args(argc);
+		return (num_args(argc));
 	else
 	{
 		shared_env = parsing(argc - 1, argv + 1);
 		if (!shared_env)
 			return (0);
 		error = create_dongles(shared_env);
-		if(!error)
+		if (!error)
 			return (1);
 		coders = create_coders(shared_env);
-		if(!coders)
+		if (!coders)
 			return (1);
 		if (create_monitor(shared_env, coders) == 1)
 			if (create_threads(shared_env, coders) == 1)
-				final(shared_env, coders);
+				free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
+					shared_env->nb_cod - 1, 1);
+					
 	}
 	return (0);
 }

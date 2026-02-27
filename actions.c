@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 17:44:56 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 08:34:54 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 int	taking_dongles(t_coder *coder)
 {
 	long long	available;
+
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	pthread_mutex_lock(&coder->dongles[1]->lock);
 	available = check_availability(coder, coder->shared_env->dongle_cd);
@@ -31,7 +32,7 @@ int	taking_dongles(t_coder *coder)
 		insert_priority(coder);
 		if (available == -1)
 		{
-			write(2, "An error occurs with timestamp retrieval.", 41);
+			write(2, "An error occurs with timestamp retrieval.\n", 42);
 			return (0);
 		}
 		check_res_available(available, coder);

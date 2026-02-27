@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 16:51:14 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 08:34:31 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@
 /// @param number The number of time to display.
 void	display_message(t_coder *coder, char *message, int number)
 {
-	pthread_mutex_lock(coder->lock_coder_data);
 	long long	current_timestamp;
 	int			i;
 
+	pthread_mutex_lock(coder->lock_coder_data);
 	i = 0;
 	if (get_sim_state(coder->shared_env) == 0)
 	{
 		pthread_mutex_unlock(coder->lock_coder_data);
 		return ;
 	}
-	while(i < number)
+	while (i < number)
 	{
 		current_timestamp = get_time_now() - coder->shared_env->start;
 		printf("%lld %i %s\n", current_timestamp, coder->id, message);
@@ -46,20 +46,6 @@ void	get_end_cooldown(long long waited_time, struct timespec *ts)
 	ts->tv_sec = waited_time / 1000;
 	ts->tv_nsec = (waited_time % 1000) * 1000000;
 }
-
-// int	priority_ok(t_coder *coder)
-// {
-// 	coder->dongles[0]->free = 0;
-// 	coder->dongles[1]->free = 0;
-// 	return (1);
-// }
-
-// void	priority_ko(t_coder *coder)
-// {
-// 	pthread_mutex_unlock(&coder->dongles[1]->lock);
-// 	pthread_cond_wait(coder->cond_priority, &coder->dongles[0]->lock);
-// 	pthread_mutex_lock(&coder->dongles[1]->lock);
-// }
 
 int	stop_taking_dongles(t_coder *coder)
 {

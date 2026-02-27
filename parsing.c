@@ -6,19 +6,19 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 09:36:37 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 16:23:07 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 08:25:16 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
 
-int final_check_input(int i, char *nptr)
+static int	final_check_input(int i, char *nptr)
 {
 	long long	result;
 
 	result = 0;
 	if (!(nptr[i] >= 48 && nptr[i] <= 57))
-        return (1);
+		return (1);
 	while (nptr[i])
 	{
 		if (!(nptr[i] <= 57 && nptr[i] >= 48))
@@ -28,15 +28,13 @@ int final_check_input(int i, char *nptr)
 			return (1);
 		i++;
 	}
-	// if (result == 0)
-	// 	return (1);
 	return (0);
 }
 
-int	check_input(char *nptr)
+static int	check_input(char *nptr)
 {
 	int			i;
-	
+
 	i = 0;
 	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
 		i++;
@@ -46,17 +44,16 @@ int	check_input(char *nptr)
 			return (1);
 		i++;
 	}
-	return final_check_input(i, nptr);
+	return (final_check_input(i, nptr));
 }
 
-void	*create_shared_env(int args_array[], char *scheduler)
+static void	*create_shared_env(int args_array[], char *scheduler)
 {
-	t_shared_env *shared_env;
+	t_shared_env	*shared_env;
 
-	// shared_env = NULL;
 	shared_env = malloc(sizeof(t_shared_env));
 	if (!shared_env)
-		return NULL;
+		return (NULL);
 	shared_env->nb_cod = args_array[0];
 	shared_env->start = get_time_now();
 	shared_env->time_to_burnout = args_array[1];
@@ -71,14 +68,13 @@ void	*create_shared_env(int args_array[], char *scheduler)
 	shared_env->number_of_compiles_required = args_array[5];
 	shared_env->dongle_cd = args_array[6];
 	shared_env->scheduler = scheduler;
-	return shared_env;
+	return (shared_env);
 }
-
 
 void	*parsing(int argc, char **args)
 {
 	int	i;
-	int	args_array[argc - 1];
+	int	args_array[8];
 
 	i = 0;
 	while (i < argc - 1)
@@ -88,16 +84,16 @@ void	*parsing(int argc, char **args)
 		else
 		{
 			printf("All arguments (except the last one) must be valid and"
-				 " positive integers.");
-			return NULL;
+				" positive integers.\n");
+			return (NULL);
 		}
 		i++;
 	}
 	if (strcmp(args[i], "fifo") == 0 || strcmp(args[i], "edf") == 0)
-		return create_shared_env(args_array, args[i]);
+		return (create_shared_env(args_array, args[i]));
 	else
 	{
-		printf("Last argument must be either 'fifo' or 'edf'.");
-		return NULL;
+		printf("Last argument must be either 'fifo' or 'edf'.\n");
+		return (NULL);
 	}
 }

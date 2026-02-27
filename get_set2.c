@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 14:43:53 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 15:25:46 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 08:43:39 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ int	get_finish(t_coder *coder)
 	pthread_mutex_lock(coder->lock_coder_data);
 	i = coder->finish;
 	pthread_mutex_unlock(coder->lock_coder_data);
-	return i;
+	return (i);
 }
 
 int	get_finish_stats(t_coder *coders, int nb)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < nb)
@@ -42,12 +42,12 @@ int	get_finish_stats(t_coder *coders, int nb)
 
 long long	get_request(t_coder *coder)
 {
-	long long temp;
-	
+	long long	temp;
+
 	pthread_mutex_lock(&coder->lock_coder_request);
 	temp = coder->request_time;
 	pthread_mutex_unlock(&coder->lock_coder_request);
-	return temp;
+	return (temp);
 }
 
 void	set_request(t_coder *coder, long long time)

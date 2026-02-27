@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:59:27 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/26 14:01:34 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 08:42:52 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ long long	get_comp_time(t_coder *coder)
 	pthread_mutex_lock(&coder->lock_coder_time);
 	time = coder->last_comp_time;
 	pthread_mutex_unlock(&coder->lock_coder_time);
-	return time;
+	return (time);
 }
 
-long long	get_time_now()
+long long	get_time_now(void)
 {
-	struct timeval ts;
+	struct timeval	ts;
 
 	gettimeofday(&ts, NULL);
-	return (ts.tv_sec * 1000LL) + (ts.tv_usec / 1000);
+	return ((ts.tv_sec * 1000LL) + (ts.tv_usec / 1000));
 }
