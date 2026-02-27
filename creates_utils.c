@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:29:59 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:49:13 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 21:40:47 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ void	init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i)
 
 int	init_threads(t_shared_env *shared_env, t_coder *coders, int *i)
 {
-	int	v;
-
-	v = 0;
 	shared_env->threads = malloc(sizeof(pthread_t) * shared_env->nb_cod);
 	if (!shared_env->threads)
 	{
@@ -65,11 +62,10 @@ int	init_threads(t_shared_env *shared_env, t_coder *coders, int *i)
 	}
 	while ((*i) < shared_env->nb_cod)
 	{
-		if (v == 5 || pthread_create(&shared_env->threads[(*i)], NULL, coder_routine,
+		if (pthread_create(&shared_env->threads[(*i)], NULL, coder_routine,
 				&coders[(*i)]) != 0)
 			return (0);
 		(*i)++;
-		v++;
 	}
 	return (1);
 }

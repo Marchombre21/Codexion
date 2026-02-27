@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:59:27 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:42:52 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 21:35:55 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,12 @@ void	set_sim_state(t_shared_env *shared_env, int i)
 
 int	get_sim_state(t_shared_env *shared_env)
 {
+	int	i;
+
 	pthread_mutex_lock(&shared_env->lock_sim_state);
-	if (shared_env->simulation_state == 1)
-	{
-		pthread_mutex_unlock(&shared_env->lock_sim_state);
-		return (1);
-	}
-	else
-	{
-		pthread_mutex_unlock(&shared_env->lock_sim_state);
-		return (0);
-	}
+	i = shared_env->simulation_state;
+	pthread_mutex_unlock(&shared_env->lock_sim_state);
+	return i;
 }
 
 void	set_comp_time(t_coder *coder, long long comp_time)
