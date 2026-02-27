@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 10:20:47 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:37:18 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	unlock_dongles(t_coder *coder)
 	int	i;
 
 	i = 0;
-	// set_request(coder, 0);
 	while (i < 2)
 	{
 		coder->dongles[i]->free = 1;

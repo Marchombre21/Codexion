@@ -6,11 +6,22 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:33:16 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:35:25 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders/codexion.h"
+
+void	final(t_shared_env *shared_env, t_coder *coders)
+{
+	int	i;
+
+	i = shared_env->simulation_state;
+	free_all((void *[]){shared_env->dongles, coders, shared_env}, 3,
+			shared_env->nb_cod - 1, 1);
+	if (i)
+		printf("All compilations are completed, nobody died.\n");
+}
 
 static void	destroy(t_shared_env *new_env, t_coder *new_coders, int end)
 {

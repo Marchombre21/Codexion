@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 08:37:02 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/27 10:27:09 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	*coder_routine(void *coder)
 	{
 		if (taking_dongles(new_coder) == 1)
 		{
+			set_request(new_coder, 0);
+			insert_priority(new_coder);
 			start_compile(new_coder);
 			start_debugging(new_coder);
 			start_refactoring(new_coder);
