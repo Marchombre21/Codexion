@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 14:18:09 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 20:49:39 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/28 16:47:40 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ void	*free_all(void *ptr[], int number, int nb_priority_array, int end)
 
 	i = 0;
 	j = 0;
-	if (end == 1 || end == 2 || end == 3)
+	if (end == 1 || end == 2)
 	{
 		new_env = (t_shared_env *)ptr[number - 1];
 		new_coders = (t_coder *)ptr[number - 2];
-		if (end != 2)
+		if (end == 1)
 			set_sim_state(new_env, 0);
 		if (end == 2)
 			if (pthread_join(*new_env->monitor, NULL) != 0)
