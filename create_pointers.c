@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/28 16:37:00 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/02/28 16:55:23 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 	{
 		set_sim_state(shared_env, 1);
 		i = 0;
-		while (get_sim_state(shared_env) == 1 && i < shared_env->nb_cod)
+		while (i < shared_env->nb_cod)
 		{
 			if (pthread_join(shared_env->threads[i++], NULL) != 0)
 			{
