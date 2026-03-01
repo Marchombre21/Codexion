@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 08:13:06 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 21:29:41 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/01 17:04:51 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,11 @@ int	main(int argc, char **argv)
 	t_coder			*coders;
 	t_shared_env	*shared_env;
 	void			*error;
-	
+
 	if (argc != 9)
 		return (num_args(argc));
 	else
 	{
-		// printf("ok");
-		// usleep(1000000000);
 		shared_env = parsing(argc - 1, argv + 1);
 		if (!shared_env)
 			return (0);

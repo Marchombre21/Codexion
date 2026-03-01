@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:29:59 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 21:40:47 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/01 17:07:16 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	init_threads(t_shared_env *shared_env, t_coder *coders, int *i)
 
 int	error_create_thread(t_shared_env *shared_env, t_coder *coders, int i)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	set_sim_state(shared_env, 2);
@@ -80,6 +80,6 @@ int	error_create_thread(t_shared_env *shared_env, t_coder *coders, int i)
 		if (pthread_join(shared_env->threads[j++], NULL) != 0)
 			write(2, "An error occured with pthread_join.\n", 38);
 	free_all((void *[]){shared_env->dongles, coders, shared_env},
-			3, shared_env->nb_cod - 1, 2);
+		3, shared_env->nb_cod - 1, 2);
 	return (0);
 }

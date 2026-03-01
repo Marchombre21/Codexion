@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 21:34:44 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/01 17:05:02 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	*monitor_routine(void *coders)
 	t_coder		*new_coders;
 	long long	limit;
 	int			i;
-	
+
 	new_coders = (t_coder *)coders;
 	while (get_sim_state(new_coders[0].shared_env) == 0)
 		usleep(100);
