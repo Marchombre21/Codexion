@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:50:47 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:13:16 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:21:26 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ long long	check_availability(t_coder *coder, long long cooldown)
 	long long		waited_time_1;
 	long long		waited_time_2;
 
-	if (get_free_dongle(coder->dongles[0]) &&
-		get_free_dongle(coder->dongles[1]))
+	if (get_free_dongle(coder->dongles[0])
+		&& get_free_dongle(coder->dongles[1]))
 	{
 		if (gettimeofday(&tv, NULL) == -1)
 			return (-1);

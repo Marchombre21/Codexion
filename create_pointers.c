@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:09:49 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:21:35 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@ void	*create_dongles(t_shared_env *shared_env)
 			return (free_all((void *[]){shared_env->dongles, shared_env}, 2,
 				i - 1, 0));
 		init_mutex_dongles(shared_env->dongles[i]);
-		// pthread_mutex_init(&shared_env->dongles[i].lock, NULL);
-		// pthread_mutex_init(&shared_env->dongles[i].lock_priority, NULL);
-		// pthread_mutex_init(&shared_env->dongles[i].lock_free, NULL);
 		shared_env->dongles[i].free = 1;
 		shared_env->dongles[i].released_at = (now.tv_sec * 1000LL)
 			+ (now.tv_usec / 1000) - shared_env->dongle_cd;
