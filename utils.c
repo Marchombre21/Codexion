@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 18:19:55 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:14:11 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	unlock_dongles(t_coder *coder)
 	i = 0;
 	while (i < 2)
 	{
-		coder->dongles[i]->free = 1;
+		set_free_dongle(coder->dongles[i], 1);
 		coder->dongles[i]->released_at = get_time_now();
 		pthread_mutex_unlock(&coder->dongles[i]->lock);
 		i++;

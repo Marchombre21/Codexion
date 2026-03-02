@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/01 17:09:39 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:12:37 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ typedef struct s_priority
 typedef struct s_dongle
 {
 	pthread_mutex_t	lock;
+	pthread_mutex_t	lock_priority;
+	pthread_mutex_t	lock_free;
 	int				free;
 	long long		released_at;
 	t_priority		*priority;
@@ -92,7 +94,10 @@ int			check_priority(t_coder *coder);
 // Parsing
 void		*parsing(int argc, char **args);
 // Get_set
+int			get_prio_dongle(t_dongle *dongle);
 int			get_count_comp(t_coder *coder);
+int			get_free_dongle(t_dongle *dongle);
+void		set_free_dongle(t_dongle *dongle, int i);
 void		set_count_comp(t_coder *coder);
 long long	get_time_now(void);
 long long	get_request(t_coder *coder);
@@ -109,6 +114,7 @@ void		*free_all(void *ptr[], int number, int nb_priority_array, int end);
 void		final(t_shared_env *shared_env, t_coder *coders);
 // Create_utils
 int			init_threads(t_shared_env *shared_env, t_coder *coders, int *i);
+void		init_mutex_dongles(t_dongle dongle);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
 int			error_create_thread(t_shared_env *shared_env, t_coder *coders,
 				int i);

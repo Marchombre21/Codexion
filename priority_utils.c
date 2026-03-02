@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 13:54:15 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:13:57 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	fifo(t_coder *coder, int i, t_coder *temp)
 	long long	request_time_0;
 	long long	request_time_1;
 
+	pthread_mutex_lock(&coder->dongles[i]->lock_priority);
 	now = get_time_now();
 	request_time_0 = get_request(coder->dongles[i]->priority->order[0]);
 	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
@@ -30,6 +31,7 @@ void	fifo(t_coder *coder, int i, t_coder *temp)
 			= coder->dongles[i]->priority->order[1];
 		coder->dongles[i]->priority->order[1] = temp;
 	}
+	pthread_mutex_unlock(&coder->dongles[i]->lock_priority);
 }
 
 void	edf(t_coder *coder, int i, t_coder *temp)
@@ -40,6 +42,7 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 	long long	comp_0;
 	long long	comp_1;
 
+	pthread_mutex_lock(&coder->dongles[i]->lock_priority);
 	now = get_time_now();
 	request_time_0 = get_request(coder->dongles[i]->priority->order[0]);
 	request_time_1 = get_request(coder->dongles[i]->priority->order[1]);
@@ -48,22 +51,23 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 	if (request_time_0 == 0
 		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 > comp_1)
 		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 == comp_1
-			&& request_time_0 > now))
+			&& coder->dongles[i]->priority->order[0]->id < coder->dongles[i]->priority->order[1]->id))
 	{
 		temp = coder->dongles[i]->priority->order[0];
 		coder->dongles[i]->priority->order[0]
 			= coder->dongles[i]->priority->order[1];
 		coder->dongles[i]->priority->order[1] = temp;
 	}
+	pthread_mutex_unlock(&coder->dongles[i]->lock_priority);
 }
 
 int	check_priority(t_coder *coder)
 {
-	if ((coder->id == coder->dongles[0]->priority->order[0]->id)
-		&& (coder->id == coder->dongles[1]->priority->order[0]->id))
+	if ((coder->id == get_prio_dongle(coder->dongles[0]))
+		&& (coder->id == get_prio_dongle(coder->dongles[1])))
 	{
-		coder->dongles[0]->free = 0;
-		coder->dongles[1]->free = 0;
+		set_free_dongle(coder->dongles[0], 0);
+		set_free_dongle(coder->dongles[1], 0);
 		return (1);
 	}
 	else
