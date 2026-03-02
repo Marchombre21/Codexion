@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 13:29:59 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:08:34 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:24:44 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void	init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i)
 	coders[i].lock_coder_data = &shared_env->lock_coder_data;
 }
 
-void	init_mutex_dongles(t_dongle dongle)
+void	init_mutex_dongles(t_dongle *dongle)
 {
-	pthread_mutex_init(&dongle.lock, NULL);
-	pthread_mutex_init(&dongle.lock_priority, NULL);
-	pthread_mutex_init(&dongle.lock_free, NULL);
+	pthread_mutex_init(&dongle->lock, NULL);
+	pthread_mutex_init(&dongle->lock_priority, NULL);
+	pthread_mutex_init(&dongle->lock_free, NULL);
 }
 
 int	init_threads(t_shared_env *shared_env, t_coder *coders, int *i)

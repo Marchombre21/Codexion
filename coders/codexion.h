@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:12:37 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:24:25 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void		*free_all(void *ptr[], int number, int nb_priority_array, int end);
 void		final(t_shared_env *shared_env, t_coder *coders);
 // Create_utils
 int			init_threads(t_shared_env *shared_env, t_coder *coders, int *i);
-void		init_mutex_dongles(t_dongle dongle);
+void		init_mutex_dongles(t_dongle *dongle);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
 int			error_create_thread(t_shared_env *shared_env, t_coder *coders,
 				int i);
