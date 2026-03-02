@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:59:12 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:13:57 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/02 10:18:58 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	edf(t_coder *coder, int i, t_coder *temp)
 	if (request_time_0 == 0
 		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 > comp_1)
 		|| (request_time_1 != 0 && request_time_1 <= now && comp_0 == comp_1
-			&& coder->dongles[i]->priority->order[0]->id < coder->dongles[i]->priority->order[1]->id))
+			&& request_time_0 > now))
 	{
 		temp = coder->dongles[i]->priority->order[0];
 		coder->dongles[i]->priority->order[0]
