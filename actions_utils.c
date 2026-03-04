@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:50:47 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:21:26 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 07:18:24 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,11 @@ long long	check_availability(t_coder *coder, long long cooldown)
 		return (0);
 }
 
-void	just_one(t_coder *coder)
+int	just_one(t_coder *coder)
 {
-	pthread_mutex_unlock(&coder->dongles[0]->lock);
 	display_message(coder, "has taken a dongle", 1);
-	usleep(coder->shared_env->time_to_burnout * 1000 + 1);
+	while (get_sim_state(coder->shared_env) == 1)
+		usleep(100);
+	pthread_mutex_unlock(&coder->dongles[0]->lock);
+	return (0);
 }

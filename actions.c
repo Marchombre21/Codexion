@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 13:35:46 by bfitte            #+#    #+#             */
-/*   Updated: 2026/02/27 18:57:32 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 07:15:27 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	taking_dongles(t_coder *coder)
 
 	pthread_mutex_lock(&coder->dongles[0]->lock);
 	if (&coder->dongles[0]->lock == &coder->dongles[1]->lock)
-		just_one(coder);
+		return (just_one(coder));
 	pthread_mutex_lock(&coder->dongles[1]->lock);
 	available = check_availability(coder, coder->shared_env->dongle_cd);
 	while (1)

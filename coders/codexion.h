@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:24:25 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 07:16:30 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void		start_debugging(t_coder *coder);
 void		start_compile(t_coder *coder);
 int			taking_dongles(t_coder *coder);
 // Actions_utils
-void		just_one(t_coder *coder);
+int			just_one(t_coder *coder);
 long long	check_availability(t_coder *coder, long long cooldown);
 void		check_res_available(long long available, t_coder *coder);
 void		insert_priority(t_coder *coder);
