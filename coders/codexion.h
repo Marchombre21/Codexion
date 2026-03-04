@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:34:13 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/04 07:16:30 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 08:23:42 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int			init_threads(t_shared_env *shared_env, t_coder *coders, int *i);
 void		init_mutex_dongles(t_dongle *dongle);
 void		init_coders_stats(t_shared_env *shared_env, t_coder *coders, int i);
 int			error_create_thread(t_shared_env *shared_env, t_coder *coders,
-				int i);
+				int i, int error);
 void		init_dongles_priority(t_shared_env *shared_env, t_coder *coders,
 				int i, int nb_max);
 // Create_pointers

@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:44:29 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:25:34 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 08:32:04 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ void	*create_coders(t_shared_env *shared_env)
 
 int	create_threads(t_shared_env *shared_env, t_coder *coders)
 {
-	int	i;
+	int			i;
+	const int	error_init_threads = init_threads(shared_env, coders, &i);
 
-	i = 0;
-	if (init_threads(shared_env, coders, &i) == 1)
+	if (error_init_threads == 1)
 	{
 		set_sim_state(shared_env, 1);
 		i = 0;
@@ -90,7 +90,7 @@ int	create_threads(t_shared_env *shared_env, t_coder *coders)
 		}
 	}
 	else
-		return (error_create_thread(shared_env, coders, i));
+		return (error_create_thread(shared_env, coders, i, error_init_threads));
 	return (1);
 }
 
