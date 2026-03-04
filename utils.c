@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:46:49 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/02 10:14:11 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 07:41:39 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	display_message(t_coder *coder, char *message, int number)
 
 	pthread_mutex_lock(coder->lock_coder_data);
 	i = 0;
-	if (get_sim_state(coder->shared_env) == 0)
+	if (get_sim_state(coder->shared_env) != 1)
 	{
 		pthread_mutex_unlock(coder->lock_coder_data);
 		return ;

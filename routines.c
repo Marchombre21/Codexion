@@ -6,7 +6,7 @@
 /*   By: bfitte <bfitte@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 11:53:36 by bfitte            #+#    #+#             */
-/*   Updated: 2026/03/01 17:05:02 by bfitte           ###   ########lyon.fr   */
+/*   Updated: 2026/03/04 07:38:27 by bfitte           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	*burning(t_coder *coder)
 {
-	set_sim_state(coder->shared_env, 0);
+	set_sim_state(coder->shared_env, 3);
 	printf("%lld %i burned out\n", get_time_now()
 		- coder->shared_env->start, coder->id);
 	pthread_cond_broadcast(&coder->shared_env->cond_free);
@@ -29,7 +29,7 @@ void	*coder_routine(void *coder)
 	new_coder = (t_coder *)coder;
 	while (get_sim_state(new_coder->shared_env) == 0)
 		usleep(100);
-	if (get_sim_state(new_coder->shared_env) == 2)
+	if (get_sim_state(new_coder->shared_env) != 1)
 		return (NULL);
 	while ((get_sim_state(new_coder->shared_env) == 1)
 		&& get_count_comp(new_coder)
